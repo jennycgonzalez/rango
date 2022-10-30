@@ -11,9 +11,9 @@
 	<groupId>com.company.aws.tools</groupId>
 	<artifactId>rango</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<name>rango</name>
-	<description>Rango project for Spring Boot</description>
+	<description>Rango project</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -44,4 +44,9 @@
 		</plugins>
 	</build>
 
+	<modules>
+		<module>rangoApp</module>
+		<module>rangoRest</module>
+		<module>rangoServices</module>
+	</modules>
 </project>
