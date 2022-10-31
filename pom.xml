@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.company.aws.tools</groupId>
 	<artifactId>rango</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>pom</packaging>
 	<name>rango</name>
 	<description>Rango project</description>
