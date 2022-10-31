@@ -1,4 +1,4 @@
-package com.company.aws.tools.rango;
+package com.company.aws.tools.rango.app;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
