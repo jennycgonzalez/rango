@@ -1,4 +1,4 @@
-package com.company.aws.tools.rango;
+package com.company.aws.tools.rango.app;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
