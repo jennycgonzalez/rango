@@ -1,0 +1,10 @@
+# See https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings
+
+# Force End-of-line conversion for bash files in working directory
+*.sh text eol=lf
+
+# Force End-of-line conversion for DOS batch files in working director
+*.bat text eol=crlf
+
+# Force End-of-line conversion for yaml files in working directory
+*.yaml text eol=crlf
