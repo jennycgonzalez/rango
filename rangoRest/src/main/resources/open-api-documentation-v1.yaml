@@ -1,8 +1,11 @@
 openapi: 3.0.3
 info:
-  title: Rango
+  title: Tool
   description: |-
-    Rango is a tool for filtering ip ranges from AWS ip ranges
+    This is a tool
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
   version: 1.0.11
 tags:
   - name: ip-range
@@ -84,13 +87,16 @@ paths:
 components:
   schemas:
     IpRange:
-      required:
-        - region
-        - networkBordeGroup
       type: object
       properties:
+        ipPrefix:
+          type: string
+          example: 3.5.140.0/22
         region:
           type: string
           example: us-west-2
+        service:
+          type: string
+          example: AMAZON
         networkBorderGroup:
           type: string
