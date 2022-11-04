@@ -1,0 +1,92 @@
+openapi: 3.0.3
+info:
+  title: Tool
+  description: |-
+    This is a tool
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 0.0.1
+tags:
+  - name: ip-range
+    description: AWS ip-ranges
+    externalDocs:
+      description: Find out more
+      url: https://docs.aws.amazon.com/general/latest/gr/aws-ip-ranges.html
+paths:
+  /ip-range/findByRegion:
+    get:
+      tags:
+        - ip-range
+      summary: Finds ip-ranges by region
+      description: Multiple region values can be provided with comma separated strings
+      operationId: findIpRangesByRegion
+      parameters:
+        - name: region
+          in: query
+          description: Region values that need to be considered for filter
+          required: true
+          schema:
+            type: string
+            enum:
+              - EU
+              - US
+              - AP
+              - CN
+              - SA
+              - AF
+              - CA          
+      responses:
+        '200':
+          description: successful operation
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IpRange'          
+        '400':
+          description: Invalid region value
+  /ip-range/findByIpFormat:
+    get:
+      tags:
+        - ip-range
+      summary: Finds ip-ranges by ip format
+      operationId: findIpRangesByIpFormat
+      parameters:
+        - name: ipFormat
+          in: query
+          description: ipFormat to filter by
+          required: true
+          schema:
+            type: string
+            enum:
+              - Ipv4
+              - Ipv6
+      responses:
+        '200':
+          description: successful operation
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/IpRange'
+        '400':
+          description: Invalid ip format value
+components:
+  schemas:
+    IpRange:
+      type: object
+      properties:
+        ipPrefix:
+          type: string
+          example: 3.5.140.0/22
+        region:
+          type: string
+          example: us-west-2
+        service:
+          type: string
+          example: AMAZON
+        networkBorderGroup:
+          type: string
