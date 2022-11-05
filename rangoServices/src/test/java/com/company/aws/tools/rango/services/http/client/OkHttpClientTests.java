@@ -1,7 +1,7 @@
 package com.company.aws.tools.rango.services.http.client;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,23 +13,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class})
 class OkHttpClientTests {
 	
-	private final String IP_RANGES_URL = "https://ip-ranges.amazonaws.com/ip-ranges.json";
+	private final String IP_RANGES = "https://ip-ranges.amazonaws.com/ip-ranges.json";
+	private final String EMPTY_URL = "";
 	
 	@Autowired
 	OkHttpClientService client;
-
+	
 	@Test
-	void getRequest_becomesSuccessfulResponse() {
-		assertNotNull(client);
-		HttpResponse response = client.get(IP_RANGES_URL);
+	void get_throwsException_whenUrlIsEmpty() {
 		
-		assertRequestIsSuccessful(response);
+		assertThrows(IllegalArgumentException.class, () -> {
+			client.get(EMPTY_URL);
+		});
+		
+	}
+	
+	@Test
+	void get_receivesSuccessfulResponse() {
+		HttpResponse response = client.get(IP_RANGES);
+		
+		assertIsSuccessful(response);
 	}
 
-	private void assertRequestIsSuccessful(HttpResponse response) {
-		// TODO Auto-generated method stub
+	private void assertIsSuccessful(HttpResponse response) {
 		assertEquals(HttpResponseCode.REQUEST_SUCCESSFUL.getNumValue(), response.getStatusCode());
 	}
-
 
 }
