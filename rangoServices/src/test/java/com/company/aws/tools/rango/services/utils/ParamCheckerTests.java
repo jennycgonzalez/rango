@@ -14,5 +14,11 @@ public class ParamCheckerTests {
 			ParamChecker.throwIfBlank(EMPTY_STRING, "Param must not be blank");
 		});
 	}
-
+	
+	@Test
+	void throwIfBlank_throwsException_whenInputIsNull() {
+		assertThrows(IllegalArgumentException.class, () -> {
+			ParamChecker.throwIfBlank(null, "Param must not be blank");
+		});
+	}
 }
