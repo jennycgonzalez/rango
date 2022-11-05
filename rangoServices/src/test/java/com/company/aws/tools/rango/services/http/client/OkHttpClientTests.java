@@ -29,6 +29,15 @@ class OkHttpClientTests {
 	}
 	
 	@Test
+	void get_throwsException_whenUrlIsNull() {
+		
+		assertThrows(IllegalArgumentException.class, () -> {
+			client.get(null);
+		});
+		
+	}
+	
+	@Test
 	void get_receivesSuccessfulResponse() {
 		HttpResponse response = client.get(IP_RANGES);
 		
