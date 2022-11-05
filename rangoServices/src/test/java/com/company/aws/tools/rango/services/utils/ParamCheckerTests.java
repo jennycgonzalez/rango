@@ -9,12 +9,10 @@ public class ParamCheckerTests {
 	private final String EMPTY_STRING = "";
 	
 	@Test
-	void throwIfEmpty_throwsExceptionWhenInputIsEmpty() {
-
+	void throwIfBlank_throwsException_whenInputIsEmpty() {
 		assertThrows(IllegalArgumentException.class, () -> {
-			ParamChecker.throwIfEmpty(EMPTY_STRING);
+			ParamChecker.throwIfBlank(EMPTY_STRING, "Param must not be blank");
 		});
-		
 	}
 
 }
