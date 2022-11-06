@@ -2,7 +2,7 @@ package com.company.aws.tools.rango.services.model;
 
 import java.util.List;
 
-public class IpRangesAmazon {
+public class IpRanges {
 
 	private String syncToken;
 	
