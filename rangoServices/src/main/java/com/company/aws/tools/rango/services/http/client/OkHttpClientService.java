@@ -20,14 +20,11 @@ public class OkHttpClientService implements HttpClient {
 	@Override
 	public HttpResponse get(String url) {
 		ParamChecker.throwIfBlank(url, "The parameter url must be not null or empty");
-		HttpResponse httpResponse = new HttpResponse();
 		try(Response response = sendGetRequest(url)){
-			httpResponse.setStatusCode(response.code());
-			httpResponse.setBody(response.body().toString());
-			return httpResponse;
+			return createHttpResponse(response);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-			throw new OkHttpClientException("The get could not be executed due to cancellation,"
+			throw new OkHttpClientException("The get request could not be executed due to cancellation,"
 					+ " a connectivity problem or timeout", ex);
 		}
 	}
@@ -39,7 +36,12 @@ public class OkHttpClientService implements HttpClient {
 		return call.execute();
 	}
 	
-	
+	private HttpResponse createHttpResponse(Response response) {
+		HttpResponse httpResponse = new HttpResponse();
+		httpResponse.setStatusCode(response.code());
+		httpResponse.setBody(response.body().toString());
+		return httpResponse;
+	}
 	
 	
 
