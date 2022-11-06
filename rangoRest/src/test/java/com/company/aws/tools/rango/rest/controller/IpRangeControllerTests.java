@@ -3,6 +3,7 @@ package com.company.aws.tools.rango.rest.controller;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,10 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .contentType(MediaType.TEXT_PLAIN))
-		   .andExpect(status().isNoContent());
+		   .contentType(MediaType.ALL))
+		   .andExpect(status().isInternalServerError())
+		   .andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE))
+		   .andExpect(content().string("Hello."));
 	}
 
 }
