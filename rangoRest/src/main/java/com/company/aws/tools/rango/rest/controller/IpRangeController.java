@@ -40,4 +40,8 @@ public class IpRangeController {
 		return PARAM_BLANK_ERROR_PREFIX + name;
 	}
 	
+	private void isValidRegion(String region) {
+		
+	}
+	
 }

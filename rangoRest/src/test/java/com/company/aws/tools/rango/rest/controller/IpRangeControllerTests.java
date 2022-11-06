@@ -31,7 +31,7 @@ class IpRangeControllerTests {
     private MockMvc mvc;
 
 	@Test
-	void findIpRangesByRegion_returnsTextWithError_whenAmazonClientThrowsException() throws Exception {
+	void findIpRangesByRegion_returnsErrorText_whenAmazonClientThrowsException() throws Exception {
 		
 		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
@@ -43,7 +43,7 @@ class IpRangeControllerTests {
 	}
 	
 	@Test
-	void findIpRangesByRegion_returnsTextWithError_whenParameterRegionIsEmpty() throws Exception {
+	void findIpRangesByRegion_returnsErrorText_whenParameterRegionIsEmpty() throws Exception {
 		
 		when(amazonClient.getIpRanges()).thenReturn(new IpRanges());
 		
@@ -55,13 +55,13 @@ class IpRangeControllerTests {
 	}
 	
 	@Test
-	void findIpRangesByRegion_returnsTextWithError_whenRegionIsInvalid() throws Exception {
+	void findIpRangesByRegion_returnsErrorText_whenRegionIsInvalid() throws Exception {
 		
 		when(amazonClient.getIpRanges()).thenReturn(new IpRanges());
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
 		   .param(IpRangeController.PARAM_REGION, INVALID_REGION)
-		   .contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.INVALID_REGION_ERROR_PREFIX)));
 	}
