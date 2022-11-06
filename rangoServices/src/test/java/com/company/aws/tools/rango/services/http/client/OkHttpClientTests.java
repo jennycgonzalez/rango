@@ -39,10 +39,6 @@ class OkHttpClientTests {
 			client.get(null);
 		});
 		
-		assertThrows(IllegalArgumentException.class, () -> {
-			client.get(null);
-		});
-		
 	}
 	
 	@Test
@@ -67,8 +63,8 @@ class OkHttpClientTests {
 		assertEquals(HttpResponseCode.FORBIDDEN.getNumValue(), response.getStatusCode());
 	}
 	
-	@Disabled
-	@Test // For this test internet connection must be unavailable
+	@Disabled("For this test internet connection must be unavailable")
+	@Test
 	void get_throwsException_whenThereIsNoInternetConnection() {
 		
 		assertThrows(OkHttpClientException.class, () -> {
