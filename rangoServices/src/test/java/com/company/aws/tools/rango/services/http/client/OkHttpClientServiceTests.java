@@ -14,7 +14,7 @@ import com.company.aws.tools.rango.services.exceptions.OkHttpClientException;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = {OkHttpClientService.class})
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class})
-class OkHttpClientTests {
+class OkHttpClientServiceTests {
 	
 	private final String IP_RANGES = "https://ip-ranges.amazonaws.com/ip-ranges.json";
 	private final String FAULTY_URL = "https://ip-ranges.amazonaws.com/ip-ranges-fake.json";
