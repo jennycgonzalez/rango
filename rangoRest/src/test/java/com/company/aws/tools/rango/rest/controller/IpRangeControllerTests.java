@@ -34,6 +34,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
+		   .param(IpRangeController.PARAM_REGION, "Region A")
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.ERROR_PREFIX)));
@@ -45,10 +46,10 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(new IpRanges());
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param("region", StringUtils.EMPTY)
+		   .param(IpRangeController.PARAM_REGION, StringUtils.EMPTY)
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		   .andExpect(content().string(containsString(IpRangeController.ERROR_PREFIX)));
+		   .andExpect(content().string(containsString(IpRangeController.PARAM_BLANK_ERROR_PREFIX)));
 	}
 	
 
