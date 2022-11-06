@@ -11,12 +11,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
 import com.company.aws.tools.rango.services.http.client.HttpResponse;
+import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
 
 @SpringBootTest(classes = {AmazonAWSClientService.class, OkHttpClientService.class})
 public class AmazonAWSClientServiceTests {
-	
-	private HttpResponse EMPTY_RESPONSE = new HttpResponse();
 	
 	@MockBean
 	private OkHttpClientService httpClient;
@@ -27,12 +26,32 @@ public class AmazonAWSClientServiceTests {
 	@Test
 	void getIpRanges_throwsException_whenResponseIsEmpty() {
 
-		when(httpClient.get(Mockito.anyString())).thenReturn(EMPTY_RESPONSE);
+		when(httpClient.get(Mockito.anyString())).thenReturn(getEmptyResponse());
 		
 		assertThrows(AmazonAWSClientException.class, () -> {
 			amazonClient.getIpRanges();
 			
 		});
+	}
+	
+	private HttpResponse getEmptyResponse() {
+		return new HttpResponse(HttpResponseCode.NO_CONTENT.getNumValue(), "");
+	}
+	
+	
+	@Test
+	void getIpRanges_throwsException_whenResponseCodeEqualsBadRequest() {
+		
+		when(httpClient.get(Mockito.anyString())).thenReturn(getBadRequestResponse());
+		
+		assertThrows(AmazonAWSClientException.class, () -> {
+			amazonClient.getIpRanges();
+			
+		});
+	}
+	
+	private HttpResponse getBadRequestResponse() {
+		return new HttpResponse(HttpResponseCode.BAD_REQUEST.getNumValue(), "");
 	}
 
 }

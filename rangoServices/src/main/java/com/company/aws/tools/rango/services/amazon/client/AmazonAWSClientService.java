@@ -23,10 +23,14 @@ public class AmazonAWSClientService {
 	}
 
 	private IpRanges parseResponseToIpRanges(HttpResponse response) {
+		throwIfBodyIsBlank(response);
+		return null;
+	}
+	
+	private void throwIfBodyIsBlank(HttpResponse response) {
 		if(StringUtils.isBlank(response.getBody())) {
 			throw new AmazonAWSClientException("The response body from aws ip-ranges is null or empty");
 		}
-		return null;
 	}
 	
 }

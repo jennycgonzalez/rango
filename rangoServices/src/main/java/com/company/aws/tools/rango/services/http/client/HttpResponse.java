@@ -5,6 +5,13 @@ public class HttpResponse {
 	private int statusCode;
 	
 	private String body;
+	
+	public HttpResponse() {}
+	
+	public HttpResponse(int statusCode, String body) {
+		this.statusCode = statusCode;
+		this.body = body;
+	}
 
 	public int getStatusCode() {
 		return statusCode;
