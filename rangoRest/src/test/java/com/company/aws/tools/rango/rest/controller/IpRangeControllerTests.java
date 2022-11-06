@@ -22,7 +22,7 @@ import com.company.aws.tools.rango.services.model.IpRanges;
 @AutoConfigureMockMvc 
 class IpRangeControllerTests {
 	
-	public static final String INVALID_REGION = "DUMMY";
+	public static final String INVALID_REGION = "DUMMY_REGION";
 	
 	@MockBean
 	private AmazonAWSClientService amazonClient;
@@ -36,7 +36,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION, "Region A")
+		   .param(IpRangeController.PARAM_REGION, Region.AF.toString())
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.ERROR_PREFIX)));

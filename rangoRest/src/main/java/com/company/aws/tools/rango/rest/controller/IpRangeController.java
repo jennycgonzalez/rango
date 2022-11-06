@@ -28,6 +28,9 @@ public class IpRangeController {
 		if(StringUtils.isBlank(region)) {
 			return paramIsBlankError(PARAM_REGION);
 		}
+		if(!Region.isValid(region)) {
+			return invalidRegionError(region);
+		}
 		try {
 			IpRanges ipRanges = amazonClient.getIpRanges();
 		} catch(AmazonAWSClientException ex) {
@@ -36,12 +39,12 @@ public class IpRangeController {
 		return null;
 	}
 	
+	private String invalidRegionError(String region) {
+		return INVALID_REGION_ERROR_PREFIX + region;
+	}
+
 	private String paramIsBlankError(String name) {
 		return PARAM_BLANK_ERROR_PREFIX + name;
-	}
-	
-	private void isValidRegion(String region) {
-		
 	}
 	
 }
