@@ -1,15 +1,38 @@
 package com.company.aws.tools.rango.rest.controller;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+
+import com.company.aws.tools.rango.services.amazon.client.AmazonAWSClientService;
+import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
+
+@SpringBootTest(classes = {IpRangeController.class})
+@AutoConfigureMockMvc 
 class IpRangeControllerTests {
+	
+	@MockBean
+	private AmazonAWSClientService amazonClient;
+	
+    @Autowired
+    private MockMvc mvc;
 
 	@Test
-	void firstTest() {
+	void findIpRangesByRegion_returnsErrorResponse_whenAmazonClientThrowsException() throws Exception {
 		
+		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
+		mvc.perform(get(Routes.FIND_BY_REGION)
+		   .contentType(MediaType.TEXT_PLAIN))
+		   .andExpect(status().isNoContent());
 	}
 
 }

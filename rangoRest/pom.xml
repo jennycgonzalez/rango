@@ -26,6 +26,10 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.company.aws.tools</groupId>
+			<artifactId>rangoServices</artifactId>
+			<version>0.0.1</version>
+		</dependency>
 	</dependencies>
-	
 </project>
