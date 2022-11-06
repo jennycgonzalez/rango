@@ -10,6 +10,9 @@ import com.company.aws.tools.rango.services.http.client.HttpResponse;
 import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
 import com.company.aws.tools.rango.services.model.IpRanges;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class AmazonAWSClientService {
@@ -20,20 +23,40 @@ public class AmazonAWSClientService {
 	private OkHttpClientService httpClient;
 	
 	public IpRanges getIpRanges() throws AmazonAWSClientException {
-		HttpResponse response = getAmazonResponse();
-		return handleReponse(response);
-	}
-
-	private HttpResponse getAmazonResponse() {
 		try {
-			return httpClient.get(IP_RANGES);
+			HttpResponse response = getAmazonResponse();
+			return handleResponse(response);
 		} catch(OkHttpClientException ex) {
 			throw new AmazonAWSClientException("The http client failed at making the get request.", ex);
+		} catch(JsonProcessingException ex) {
+			throw new AmazonAWSClientException("The amazon aws ip-ranges response body could not be parsed.", ex);
 		}
 	}
 
-	private IpRanges handleReponse(HttpResponse response) {
+	private HttpResponse getAmazonResponse() {
+		return httpClient.get(IP_RANGES);
+	}
+
+	private IpRanges handleResponse(HttpResponse response) throws JsonProcessingException {
 		HttpResponseCode code = HttpResponseCode.fromHttpCode(response.getStatusCode());
+		if(reponseIsSuccessful(code)) {
+			return parseBodyToIpRanges(response.getBody());
+		} else {
+			return handleFailureResponse(code);
+		}
+	}
+	
+	private boolean reponseIsSuccessful(HttpResponseCode code) {
+		return HttpResponseCode.REQUEST_SUCCESSFUL.equals(code);
+	}
+
+	private IpRanges parseBodyToIpRanges(String body) throws JsonProcessingException {
+		throwIfBodyIsBlank(body);
+		ObjectMapper mapper = new ObjectMapper();
+		return mapper.readValue(body, IpRanges.class);
+	}
+	
+	private IpRanges handleFailureResponse(HttpResponseCode code) {
 		switch(code) {
 		case BAD_REQUEST:
 			// fall through is intended
@@ -41,22 +64,18 @@ public class AmazonAWSClientService {
 			// fall through is intended
 		case NOT_FOUND:
 			throw new AmazonAWSClientException("The request to amazon aws ip ranges was unsuccessful. Please check URL used for get request.");
-		case REQUEST_SUCCESSFUL:
-			return parseResponseToIpRanges(response);
 		default:
-			throw new AmazonAWSClientException("The request to amazon aws ip ranges returned an unexpected code: " + response.getStatusCode());
+			throw new AmazonAWSClientException("The request to amazon aws ip ranges returned an unexpected code: " + code.getNumValue());
 		}
 	}
 
-	private IpRanges parseResponseToIpRanges(HttpResponse response) {
-		throwIfBodyIsBlank(response);
-		return null;
-	}
-	
-	private void throwIfBodyIsBlank(HttpResponse response) {
-		if(StringUtils.isBlank(response.getBody())) {
+	private void throwIfBodyIsBlank(String body) {
+		if(StringUtils.isBlank(body)) {
 			throw new AmazonAWSClientException("The response body from aws ip-ranges is null or empty");
 		}
 	}
+	
+
+
 	
 }

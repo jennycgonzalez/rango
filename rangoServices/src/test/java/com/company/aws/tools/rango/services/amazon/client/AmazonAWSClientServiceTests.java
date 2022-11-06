@@ -25,7 +25,7 @@ public class AmazonAWSClientServiceTests {
 	private AmazonAWSClientService amazonClient;
 	
 	@Test
-	void getIpRanges_throwsException_whenResponseBodyIsEmpty() {
+	void getIpRanges_throwsException_whenReuqestIsSuccessfulButResponseBodyIsEmpty() {
 
 		when(httpClient.get(Mockito.anyString())).thenReturn(getResponseWithEmptyBody());
 		
@@ -80,4 +80,18 @@ public class AmazonAWSClientServiceTests {
 			
 		});
 	}
+	
+//	@Test
+//	void getIpRanges_returnsIpRanges_whenResponseBodyIsCorrect() {
+//		
+//		when(httpClient.get(Mockito.anyString())).thenThrow(OkHttpClientException.class);
+//		
+//		assertThrows(AmazonAWSClientException.class, () -> {
+//			amazonClient.getIpRanges();
+//			
+//		});
+//	}
+//	
+	
+	
 }
