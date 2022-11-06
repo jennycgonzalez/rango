@@ -15,6 +15,7 @@ import com.company.aws.tools.rango.services.exceptions.OkHttpClientException;
 import com.company.aws.tools.rango.services.http.client.HttpResponse;
 import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
+import com.company.aws.tools.rango.services.model.BasisPrefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,7 +30,7 @@ public class AmazonAWSClientServiceTests {
 	private AmazonAWSClientService amazonClient;
 	
 	@Test
-	void getIpRanges_throwsException_whenReuqestIsSuccessfulButResponseBodyIsEmpty() {
+	void getIpRanges_throwsException_whenRequestIsSuccessfulButResponseBodyIsEmpty() {
 
 		when(httpClient.get(Mockito.anyString())).thenReturn(getResponseWithEmptyBody());
 		
@@ -100,5 +101,23 @@ public class AmazonAWSClientServiceTests {
 		ObjectMapper mapper = new ObjectMapper();
 		return new HttpResponse(HttpResponseCode.REQUEST_SUCCESSFUL.getNumValue(), mapper.writeValueAsString(ipRanges));
 	}
+	
+	@Test
+	void getIpRanges_throwsException_whenResponseBodyIsIncorrect() throws JsonProcessingException {
+		
+		when(httpClient.get(Mockito.anyString())).thenReturn(getResponseWithIncorrectBody());
+		
+		assertThrows(AmazonAWSClientException.class, () -> {
+			amazonClient.getIpRanges();
+			
+		});
+	}
+
+	private HttpResponse getResponseWithIncorrectBody() throws JsonProcessingException {
+		BasisPrefix notIpRangesObject = new BasisPrefix();
+		ObjectMapper mapper = new ObjectMapper();
+		return new HttpResponse(HttpResponseCode.REQUEST_SUCCESSFUL.getNumValue(), mapper.writeValueAsString(notIpRangesObject));
+	}
+	
 	
 }
