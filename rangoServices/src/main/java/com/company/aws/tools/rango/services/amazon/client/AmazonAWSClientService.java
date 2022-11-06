@@ -50,7 +50,7 @@ public class AmazonAWSClientService {
 	}
 
 	private IpRanges parseBodyToIpRanges(String body) throws JsonProcessingException {
-		throwIfBodyIsBlank(body);
+		//throwIfBodyIsBlank(body);
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(body, IpRanges.class);
 	}
@@ -68,13 +68,10 @@ public class AmazonAWSClientService {
 		}
 	}
 
-	private void throwIfBodyIsBlank(String body) {
-		if(StringUtils.isBlank(body)) {
-			throw new AmazonAWSClientException("The response body from aws ip-ranges is null or empty");
-		}
-	}
-	
-
-
+//	private void throwIfBodyIsBlank(String body) {
+//		if(StringUtils.isBlank(body)) {
+//			throw new AmazonAWSClientException("The response body from aws ip-ranges is null or empty");
+//		}
+//	}
 	
 }
