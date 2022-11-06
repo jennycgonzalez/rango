@@ -1,8 +1,8 @@
 package com.company.aws.tools.rango.rest.controller;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import org.junit.jupiter.api.Test;
@@ -27,15 +27,14 @@ class IpRangeControllerTests {
     private MockMvc mvc;
 
 	@Test
-	void findIpRangesByRegion_returnsErrorResponse_whenAmazonClientThrowsException() throws Exception {
+	void findIpRangesByRegion_returnsTextWithError_whenAmazonClientThrowsException() throws Exception {
 		
 		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
 		   .contentType(MediaType.ALL))
-		   //.andExpect(status().isInternalServerError())
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		   .andExpect(content().string(IpRangeController.GENERAL_ERROR));
+		   .andExpect(content().string(containsString(IpRangeController.ERROR_PREFIX)));
 	}
 
 }

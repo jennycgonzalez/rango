@@ -12,7 +12,7 @@ import com.company.aws.tools.rango.services.model.IpRanges;
 @RestController
 public class IpRangeController {
 	
-	public static final String GENERAL_ERROR = "There is a problem in the communication with amazon aws.";
+	public static final String ERROR_PREFIX = "There was a problem with the communication with amazon aws. Reason: ";
 	public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain;charset=ISO-8859-1";
 	
 	
@@ -24,7 +24,7 @@ public class IpRangeController {
 		try {
 			IpRanges ipRanges = amazonClient.getIpRanges();
 		} catch(AmazonAWSClientException ex) {
-			return GENERAL_ERROR;
+			return ERROR_PREFIX + ex.getMessage();
 		}
 		return null;
 	}
