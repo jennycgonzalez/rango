@@ -22,18 +22,21 @@ public class AmazonAWSClientService {
 	private OkHttpClientService httpClient;
 	
 	public IpRanges getIpRanges() throws AmazonAWSClientException {
+		HttpResponse response = getAmazonResponse();
 		try {
-			HttpResponse response = getAmazonResponse();
 			return handle(response);
-		} catch(OkHttpClientException ex) {
-			throw new AmazonAWSClientException("The http client failed at making the get request.", ex);
-		} catch(JsonProcessingException ex) {
-			throw new AmazonAWSClientException("The amazon aws ip-ranges response body could not be parsed.", ex);
+		}  catch(JsonProcessingException ex) {
+			throw new AmazonAWSClientException("The amazon aws ip-ranges response body could not be parsed. "
+					+ "Body is: " + response.getBody() , ex);
 		}
 	}
 
 	private HttpResponse getAmazonResponse() throws OkHttpClientException{
-		return httpClient.get(IP_RANGES);
+		try {
+			return httpClient.get(IP_RANGES);
+		} catch(OkHttpClientException ex) {
+			throw new AmazonAWSClientException("The http client failed at making the request.", ex);
+		} 
 	}
 
 	private IpRanges handle(HttpResponse response) throws JsonProcessingException {
@@ -50,7 +53,6 @@ public class AmazonAWSClientService {
 	}
 
 	private IpRanges parseBodyToIpRanges(String body) throws JsonProcessingException {
-		//throwIfBodyIsBlank(body);
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.readValue(body, IpRanges.class);
 	}
@@ -68,10 +70,4 @@ public class AmazonAWSClientService {
 		}
 	}
 
-//	private void throwIfBodyIsBlank(String body) {
-//		if(StringUtils.isBlank(body)) {
-//			throw new AmazonAWSClientException("The response body from aws ip-ranges is null or empty");
-//		}
-//	}
-	
 }
