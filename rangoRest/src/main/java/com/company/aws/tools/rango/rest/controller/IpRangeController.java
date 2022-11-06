@@ -17,6 +17,7 @@ public class IpRangeController {
 	public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain;charset=ISO-8859-1";
 	public static final String PARAM_BLANK_ERROR_PREFIX = "The following parameter must be not empty or null: ";
 	public static final String PARAM_REGION = "region";
+	public static final String INVALID_REGION_ERROR_PREFIX = "The given region is invalid: ";
 	
 	
 	@Autowired
@@ -39,7 +40,4 @@ public class IpRangeController {
 		return PARAM_BLANK_ERROR_PREFIX + name;
 	}
 	
-	
-
-
 }

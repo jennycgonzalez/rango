@@ -22,6 +22,8 @@ import com.company.aws.tools.rango.services.model.IpRanges;
 @AutoConfigureMockMvc 
 class IpRangeControllerTests {
 	
+	public static final String INVALID_REGION = "DUMMY";
+	
 	@MockBean
 	private AmazonAWSClientService amazonClient;
 	
@@ -50,6 +52,18 @@ class IpRangeControllerTests {
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.PARAM_BLANK_ERROR_PREFIX)));
+	}
+	
+	@Test
+	void findIpRangesByRegion_returnsTextWithError_whenRegionIsInvalid() throws Exception {
+		
+		when(amazonClient.getIpRanges()).thenReturn(new IpRanges());
+		
+		mvc.perform(get(Routes.FIND_BY_REGION)
+		   .param(IpRangeController.PARAM_REGION, INVALID_REGION)
+		   .contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		   .andExpect(content().string(containsString(IpRangeController.INVALID_REGION_ERROR_PREFIX)));
 	}
 	
 
