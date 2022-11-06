@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Service;
 
+import com.company.aws.tools.rango.services.exceptions.OkHttpClientException;
 import com.company.aws.tools.rango.services.utils.ParamChecker;
 
 import okhttp3.Call;
@@ -24,10 +25,10 @@ public class OkHttpClientService implements HttpClient {
 			httpResponse.setStatusCode(response.code());
 			httpResponse.setBody(response.body().toString());
 			return httpResponse;
-		} catch (IOException e) {
-			e.printStackTrace();
-			httpResponse.setStatusCode(3000);
-			return httpResponse;
+		} catch (IOException ex) {
+			ex.printStackTrace();
+			throw new OkHttpClientException("The get could not be executed due to cancellation,"
+					+ " a connectivity problem or timeout", ex);
 		}
 	}
 	
