@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.company.aws.tools.rango.services.amazon.client.AmazonAWSClientService;
 import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
+import com.company.aws.tools.rango.services.model.IpRanges;
 
 @SpringBootTest(classes = {IpRangeController.class})
 @AutoConfigureMockMvc 
@@ -36,5 +38,18 @@ class IpRangeControllerTests {
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.ERROR_PREFIX)));
 	}
+	
+	@Test
+	void findIpRangesByRegion_returnsTextWithError_whenParameterRegionIsEmpty() throws Exception {
+		
+		when(amazonClient.getIpRanges()).thenReturn(new IpRanges());
+		
+		mvc.perform(get(Routes.FIND_BY_REGION)
+		   .param("region", StringUtils.EMPTY)
+		   .contentType(MediaType.ALL))
+		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		   .andExpect(content().string(containsString(IpRangeController.ERROR_PREFIX)));
+	}
+	
 
 }
