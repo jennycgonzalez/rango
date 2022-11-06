@@ -33,9 +33,9 @@ class IpRangeControllerTests {
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
 		   .contentType(MediaType.ALL))
-		   .andExpect(status().isInternalServerError())
-		   .andExpect(content().contentType(MediaType.TEXT_PLAIN_VALUE))
-		   .andExpect(content().string("Hello."));
+		   //.andExpect(status().isInternalServerError())
+		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		   .andExpect(content().string(IpRangeController.GENERAL_ERROR));
 	}
 
 }
