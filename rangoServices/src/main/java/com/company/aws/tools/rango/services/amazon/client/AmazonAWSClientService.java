@@ -27,13 +27,11 @@ public class AmazonAWSClientService {
 		HttpResponseCode code = HttpResponseCode.fromHttpCode(response.getStatusCode());
 		switch(code) {
 		case BAD_REQUEST:
-			throw new AmazonAWSClientException("The request to amazon aws ip ranges was unsuccesful.");
+			// fall through is intended
 		case FORBIDDEN:
-			break;
+			// fall through is intended
 		case NOT_FOUND:
-			break;
-		case NO_CONTENT:
-			throw new AmazonAWSClientException("The request to amazon aws ip ranges returned no content.");
+			throw new AmazonAWSClientException("The request to amazon aws ip ranges was unsuccessful. Please check URL used for get request.");
 		case REQUEST_SUCCESSFUL:
 			return parseResponseToIpRanges(response);
 		case UNEXPECTED_CODE:
