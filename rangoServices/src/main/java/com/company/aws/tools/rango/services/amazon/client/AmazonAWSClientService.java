@@ -1,6 +1,5 @@
 package com.company.aws.tools.rango.services.amazon.client;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +43,7 @@ public class AmazonAWSClientService {
 		if(reponseIsSuccessful(code)) {
 			return parseBodyToIpRanges(response.getBody());
 		} else {
-			return handleFailureResponse(code);
+			return handleFailure(code);
 		}
 	}
 	
@@ -57,7 +56,7 @@ public class AmazonAWSClientService {
 		return mapper.readValue(body, IpRanges.class);
 	}
 	
-	private IpRanges handleFailureResponse(HttpResponseCode code) {
+	private IpRanges handleFailure(HttpResponseCode code) {
 		switch(code) {
 		case BAD_REQUEST:
 			// fall through is intended
