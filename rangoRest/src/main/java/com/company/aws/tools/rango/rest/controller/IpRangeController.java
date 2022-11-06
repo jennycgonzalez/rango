@@ -43,7 +43,6 @@ public class IpRangeController {
 			return invalidRegionError(region);
 		}
 		IpRanges ipRanges = amazonClient.getIpRanges();
-		
 		String result = ipRangesFilteredBy(ipRanges, region);
 		return result;
 	}

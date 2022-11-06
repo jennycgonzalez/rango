@@ -29,11 +29,11 @@ class IpRangeControllerTests {
 	
 	public static final String INVALID_REGION = "DUMMY_REGION";
 	public static final String TEST_REGION_US = "us-west-2";
-	public static final String TEST_REGION_ME = "me-south-1";
-	public static final String TEST_IP4PREFIX_A = "3.2.34.0/26";
-	public static final String TEST_IP4PREFIX_B = "13.34.65.64/27";
-	public static final String TEST_IP4PREFIX_C = "3.108.0.0/14";
-	public static final String TEST_IP4PREFIX_D = "52.93.178.219/32";
+	public static final String TEST_REGION_CA = "ca-south-1";
+	public static final String TEST_IP4PREFIX_US_A = "3.2.34.0/26";
+	public static final String TEST_IP4PREFIX_US_B = "13.34.65.64/27";
+	public static final String TEST_IP4PREFIX_CA_C = "3.108.0.0/14";
+	public static final String TEST_IP4PREFIX_CA_D = "52.93.178.219/32";
 	
 	@MockBean
 	private AmazonAWSClientService amazonClient;
@@ -86,24 +86,38 @@ class IpRangeControllerTests {
 		   .param(IpRangeController.PARAM_REGION_NAME, Region.US.toString())
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_A)))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_B)));
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)));
 	}
 	
 	@Test
 	void findIpRangesByRegion_returnsTextWithoutEntriesThatAreNotFromRegion() throws Exception {
-		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_ME);
+		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
 				.param(IpRangeController.PARAM_REGION_NAME, Region.US.toString())
 				.contentType(MediaType.ALL))
 		.andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_A)))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_B)))
-		.andExpect(content().string(not(containsString(TEST_IP4PREFIX_C))))
-		.andExpect(content().string(not(containsString(TEST_IP4PREFIX_D))));
+		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
+		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
+		.andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_C))))
+		.andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_D))));
+	}
+	
+	@Test
+	void findIpRangesByRegion_returnsTextWithAllEntries_whenRegionEqualsAll() throws Exception {
+		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
+		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
 		
+		mvc.perform(get(Routes.FIND_BY_REGION)
+				.param(IpRangeController.PARAM_REGION_NAME, Region.ALL.toString())
+				.contentType(MediaType.ALL))
+		.andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
+		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
+		.andExpect(content().string(containsString(TEST_IP4PREFIX_CA_C)))
+		.andExpect(content().string(containsString(TEST_IP4PREFIX_CA_D)));
 	}
 	
 	private IpRanges createIpRangesWithRegions(String regionA, String regionC) {
@@ -129,15 +143,15 @@ class IpRangeControllerTests {
 	
 	private List<Ip4Prefix> createIp4PrefixListAB(String region) {
 		List<Ip4Prefix> prefixes = new ArrayList<>();
-		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_A, region));
-		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_B, region));
+		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_US_A, region));
+		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_US_B, region));
 		return prefixes;
 	}
 	
 	private List<Ip4Prefix> createIp4PrefixListCD(String region) {
 		List<Ip4Prefix> prefixes = new ArrayList<>();
-		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_C, region));
-		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_D, region));
+		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_CA_C, region));
+		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_CA_D, region));
 		return prefixes;
 	}
 	

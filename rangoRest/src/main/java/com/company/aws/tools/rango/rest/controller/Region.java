@@ -2,7 +2,7 @@ package com.company.aws.tools.rango.rest.controller;
 
 public enum Region {
 	EU, US, AP, CN,
-	SA, AF, CA;
+	SA, AF, CA, ALL;
 	
 	public static boolean isValid(String region) {
 		for(Region value : values()) {
