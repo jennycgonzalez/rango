@@ -1,5 +1,6 @@
 package com.company.aws.tools.rango.services.amazon.client;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
@@ -14,6 +15,9 @@ import com.company.aws.tools.rango.services.exceptions.OkHttpClientException;
 import com.company.aws.tools.rango.services.http.client.HttpResponse;
 import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
+import com.company.aws.tools.rango.services.model.IpRanges;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest(classes = {AmazonAWSClientService.class, OkHttpClientService.class})
 public class AmazonAWSClientServiceTests {
@@ -81,17 +85,20 @@ public class AmazonAWSClientServiceTests {
 		});
 	}
 	
-//	@Test
-//	void getIpRanges_returnsIpRanges_whenResponseBodyIsCorrect() {
-//		
-//		when(httpClient.get(Mockito.anyString())).thenThrow(OkHttpClientException.class);
-//		
-//		assertThrows(AmazonAWSClientException.class, () -> {
-//			amazonClient.getIpRanges();
-//			
-//		});
-//	}
-//	
-	
+	@Test
+	void getIpRanges_returnsNotNullIpRanges_whenResponseBodyIsCorrect() throws JsonProcessingException {
+		
+		when(httpClient.get(Mockito.anyString())).thenReturn(getCorrectRequestResponse());
+		
+		IpRanges ipRanges = amazonClient.getIpRanges();
+		
+		assertNotNull(ipRanges);
+	}
+
+	private HttpResponse getCorrectRequestResponse() throws JsonProcessingException {
+		IpRanges ipRanges = new IpRanges();
+		ObjectMapper mapper = new ObjectMapper();
+		return new HttpResponse(HttpResponseCode.REQUEST_SUCCESSFUL.getNumValue(), mapper.writeValueAsString(ipRanges));
+	}
 	
 }
