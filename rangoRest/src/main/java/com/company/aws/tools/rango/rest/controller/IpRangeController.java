@@ -16,7 +16,7 @@ public class IpRangeController {
 	public static final String ERROR_PREFIX = "There was a problem with the communication with amazon aws. Reason: ";
 	public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain;charset=ISO-8859-1";
 	public static final String PARAM_BLANK_ERROR_PREFIX = "The following parameter must be not empty or null: ";
-	public static final String PARAM_REGION = "region";
+	public static final String PARAM_REGION_NAME = "region";
 	public static final String INVALID_REGION_ERROR_PREFIX = "The given region is invalid: ";
 	
 	
@@ -24,9 +24,9 @@ public class IpRangeController {
 	private AmazonAWSClientService amazonClient;
 	
 	@GetMapping(path = Routes.FIND_BY_REGION,  produces = {MEDIA_TYPE_TEXT_PLAIN})
-	public String findIpRangesByRegion(@RequestParam(value = PARAM_REGION, required = false) String region) {
+	public String findIpRangesByRegion(@RequestParam(value = PARAM_REGION_NAME, required = false) String region) {
 		if(StringUtils.isBlank(region)) {
-			return paramIsBlankError(PARAM_REGION);
+			return paramIsBlankError(PARAM_REGION_NAME);
 		}
 		if(!Region.isValid(region)) {
 			return invalidRegionError(region);

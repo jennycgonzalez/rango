@@ -36,7 +36,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION, Region.AF.toString())
+		   .param(IpRangeController.PARAM_REGION_NAME, Region.AF.toString())
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.ERROR_PREFIX)));
@@ -48,7 +48,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(new IpRanges());
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION, StringUtils.EMPTY)
+		   .param(IpRangeController.PARAM_REGION_NAME, StringUtils.EMPTY)
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.PARAM_BLANK_ERROR_PREFIX)));
@@ -60,7 +60,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(new IpRanges());
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION, INVALID_REGION)
+		   .param(IpRangeController.PARAM_REGION_NAME, INVALID_REGION)
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.INVALID_REGION_ERROR_PREFIX)));
