@@ -44,11 +44,13 @@ public class IpRangeController {
 		}
 		IpRanges ipRanges = amazonClient.getIpRanges();
 		
-		return ipRangesFilteredBy(ipRanges, region);
+		String result = ipRangesFilteredBy(ipRanges, region);
+		return result;
 	}
 
 	private String ipRangesFilteredBy(IpRanges ipRanges, String region) {
-		List<String> prefixes =  ipRanges.getPrefixes().stream().filter(p -> region.equals(p.getRegion()))
+		List<String> prefixes =  ipRanges.getPrefixes().stream()
+				.filter(p -> p.getRegion().startsWith(region.toLowerCase()))
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
 		return StringUtils.join(prefixes, "\n");
