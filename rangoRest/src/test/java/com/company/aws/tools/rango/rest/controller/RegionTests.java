@@ -18,5 +18,5 @@ public class RegionTests {
 	void isValid_returnsTrue_whenRegionValid() {
 		assertTrue(Region.isValid(Region.EU.toString()));
 	}
-
+	
 }
