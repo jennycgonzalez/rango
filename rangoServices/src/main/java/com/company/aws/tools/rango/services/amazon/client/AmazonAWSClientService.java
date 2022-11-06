@@ -11,7 +11,6 @@ import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
 import com.company.aws.tools.rango.services.model.IpRanges;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -25,7 +24,7 @@ public class AmazonAWSClientService {
 	public IpRanges getIpRanges() throws AmazonAWSClientException {
 		try {
 			HttpResponse response = getAmazonResponse();
-			return handleResponse(response);
+			return handle(response);
 		} catch(OkHttpClientException ex) {
 			throw new AmazonAWSClientException("The http client failed at making the get request.", ex);
 		} catch(JsonProcessingException ex) {
@@ -33,11 +32,11 @@ public class AmazonAWSClientService {
 		}
 	}
 
-	private HttpResponse getAmazonResponse() {
+	private HttpResponse getAmazonResponse() throws OkHttpClientException{
 		return httpClient.get(IP_RANGES);
 	}
 
-	private IpRanges handleResponse(HttpResponse response) throws JsonProcessingException {
+	private IpRanges handle(HttpResponse response) throws JsonProcessingException {
 		HttpResponseCode code = HttpResponseCode.fromHttpCode(response.getStatusCode());
 		if(reponseIsSuccessful(code)) {
 			return parseBodyToIpRanges(response.getBody());
