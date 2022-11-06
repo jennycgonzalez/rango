@@ -24,9 +24,9 @@ public class AmazonAWSClientServiceTests {
 	private AmazonAWSClientService amazonClient;
 	
 	@Test
-	void getIpRanges_throwsException_whenResponseIsEmpty() {
+	void getIpRanges_throwsException_whenResponseBodyIsEmpty() {
 
-		when(httpClient.get(Mockito.anyString())).thenReturn(getEmptyResponse());
+		when(httpClient.get(Mockito.anyString())).thenReturn(getResponseWithEmptyBody());
 		
 		assertThrows(AmazonAWSClientException.class, () -> {
 			amazonClient.getIpRanges();
@@ -34,8 +34,8 @@ public class AmazonAWSClientServiceTests {
 		});
 	}
 	
-	private HttpResponse getEmptyResponse() {
-		return new HttpResponse(HttpResponseCode.NO_CONTENT.getNumValue(), "");
+	private HttpResponse getResponseWithEmptyBody() {
+		return new HttpResponse(HttpResponseCode.REQUEST_SUCCESSFUL.getNumValue(), "");
 	}
 	
 	
@@ -52,6 +52,21 @@ public class AmazonAWSClientServiceTests {
 	
 	private HttpResponse getBadRequestResponse() {
 		return new HttpResponse(HttpResponseCode.BAD_REQUEST.getNumValue(), "This was a bad request");
+	}
+	
+	@Test
+	void getIpRanges_throwsException_whenResponseCodeIsUnexpected() {
+		
+		when(httpClient.get(Mockito.anyString())).thenReturn(getResponseWithUnexpectedCode());
+		
+		assertThrows(AmazonAWSClientException.class, () -> {
+			amazonClient.getIpRanges();
+			
+		});
+	}
+	
+	private HttpResponse getResponseWithUnexpectedCode() {
+		return new HttpResponse(HttpResponseCode.UNEXPECTED_CODE.getNumValue(), "This has unexpected code");
 	}
 
 }

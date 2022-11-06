@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
 import com.company.aws.tools.rango.services.http.client.HttpResponse;
+import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
 import com.company.aws.tools.rango.services.model.IpRanges;
 
@@ -19,7 +20,29 @@ public class AmazonAWSClientService {
 	
 	public IpRanges getIpRanges() {
 		HttpResponse response = httpClient.get(IP_RANGES);
-		return parseResponseToIpRanges(response);
+		return handleReponse(response);
+	}
+
+	private IpRanges handleReponse(HttpResponse response) {
+		HttpResponseCode code = HttpResponseCode.fromHttpCode(response.getStatusCode());
+		switch(code) {
+		case BAD_REQUEST:
+			throw new AmazonAWSClientException("The request to amazon aws ip ranges was unsuccesful.");
+		case FORBIDDEN:
+			break;
+		case NOT_FOUND:
+			break;
+		case NO_CONTENT:
+			throw new AmazonAWSClientException("The request to amazon aws ip ranges returned no content.");
+		case REQUEST_SUCCESSFUL:
+			return parseResponseToIpRanges(response);
+		case UNEXPECTED_CODE:
+			throw new AmazonAWSClientException("The request to amazon aws ip ranges returned an unexpected code: " + response.getStatusCode());
+		default:
+			break;
+			
+		}
+		return null;
 	}
 
 	private IpRanges parseResponseToIpRanges(HttpResponse response) {
