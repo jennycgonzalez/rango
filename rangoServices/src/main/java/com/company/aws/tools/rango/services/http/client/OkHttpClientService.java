@@ -18,7 +18,7 @@ public class OkHttpClientService implements HttpClient {
 	OkHttpClient client;
 
 	@Override
-	public HttpResponse get(String url) {
+	public HttpResponse get(String url) throws OkHttpClientException{
 		ParamChecker.throwIfBlank(url, "The parameter url must be not null or empty");
 		try(Response response = sendGetRequest(url)){
 			return createHttpResponse(response);

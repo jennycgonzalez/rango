@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
+import com.company.aws.tools.rango.services.exceptions.OkHttpClientException;
 import com.company.aws.tools.rango.services.http.client.HttpResponse;
 import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
@@ -69,4 +70,14 @@ public class AmazonAWSClientServiceTests {
 		return new HttpResponse(HttpResponseCode.UNEXPECTED_CODE.getNumValue(), "This has unexpected code");
 	}
 
+	@Test
+	void getIpRanges_throwsException_whenHttpClientThrowsException() {
+		
+		when(httpClient.get(Mockito.anyString())).thenThrow(OkHttpClientException.class);
+		
+		assertThrows(AmazonAWSClientException.class, () -> {
+			amazonClient.getIpRanges();
+			
+		});
+	}
 }

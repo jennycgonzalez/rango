@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
+import com.company.aws.tools.rango.services.exceptions.OkHttpClientException;
 import com.company.aws.tools.rango.services.http.client.HttpResponse;
 import com.company.aws.tools.rango.services.http.client.HttpResponseCode;
 import com.company.aws.tools.rango.services.http.client.OkHttpClientService;
@@ -18,9 +19,17 @@ public class AmazonAWSClientService {
 	@Autowired
 	private OkHttpClientService httpClient;
 	
-	public IpRanges getIpRanges() {
-		HttpResponse response = httpClient.get(IP_RANGES);
+	public IpRanges getIpRanges() throws AmazonAWSClientException {
+		HttpResponse response = getAmazonResponse();
 		return handleReponse(response);
+	}
+
+	private HttpResponse getAmazonResponse() {
+		try {
+			return httpClient.get(IP_RANGES);
+		} catch(OkHttpClientException ex) {
+			throw new AmazonAWSClientException("The http client failed at making the get request.", ex);
+		}
 	}
 
 	private IpRanges handleReponse(HttpResponse response) {
@@ -34,13 +43,9 @@ public class AmazonAWSClientService {
 			throw new AmazonAWSClientException("The request to amazon aws ip ranges was unsuccessful. Please check URL used for get request.");
 		case REQUEST_SUCCESSFUL:
 			return parseResponseToIpRanges(response);
-		case UNEXPECTED_CODE:
-			throw new AmazonAWSClientException("The request to amazon aws ip ranges returned an unexpected code: " + response.getStatusCode());
 		default:
-			break;
-			
+			throw new AmazonAWSClientException("The request to amazon aws ip ranges returned an unexpected code: " + response.getStatusCode());
 		}
-		return null;
 	}
 
 	private IpRanges parseResponseToIpRanges(HttpResponse response) {
