@@ -51,7 +51,7 @@ public class AmazonAWSClientServiceTests {
 	}
 	
 	private HttpResponse getBadRequestResponse() {
-		return new HttpResponse(HttpResponseCode.BAD_REQUEST.getNumValue(), "");
+		return new HttpResponse(HttpResponseCode.BAD_REQUEST.getNumValue(), "This was a bad request");
 	}
 
 }
