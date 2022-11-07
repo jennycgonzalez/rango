@@ -12,6 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.company.aws.tools.rango.services.model.Ip4Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
+import com.company.aws.tools.rango.services.model.Region;
 
 @SpringBootTest(classes = {IpRangesFilter.class})
 public class IpRangesFilterTests {
@@ -31,7 +32,7 @@ public class IpRangesFilterTests {
 	void filterByRegion_returnsResult_containingIp4Prefix_fromRegion() {
 		IpRanges ipRanges = createIpRangesWithRegion(TEST_REGION_US);
 		
-		String result = filter.filterByRegion(ipRanges, TEST_REGION_US);
+		String result = filter.filterByRegion(ipRanges, Region.US.toString());
 		
 		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_A);
 		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_B);
@@ -41,7 +42,7 @@ public class IpRangesFilterTests {
 	void filterByRegion_returnsResult_WithoutIp4PrefixesThatAreNotFromRegion() {
 		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
-		String result = filter.filterByRegion(ipRanges, TEST_REGION_US);
+		String result = filter.filterByRegion(ipRanges, Region.US.toString());
 		
 		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_A);
 		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_B);
@@ -53,7 +54,7 @@ public class IpRangesFilterTests {
 	void filterByRegion_returnsAllIp4Prefixes_whenRegionEqualsAll() {
 		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
-		String result = filter.filterByRegion(ipRanges, TEST_REGION_US);
+		String result = filter.filterByRegion(ipRanges, Region.ALL.toString());
 		
 		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_A);
 		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_B);
