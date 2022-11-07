@@ -14,13 +14,12 @@ public enum RegionPrefix {
 	}
 	
 	public static boolean startsWithValidPrefix(String region) {
-//		for(RegionPrefix prefix : values()) {
-//			if(region.startsWith(prefix.toString().toLowerCase())) {
-//				return true;
-//			}
-//		}
-//		return false;
-		return true;
+		for(RegionPrefix prefix : values()) {
+			if(region.startsWith(prefix.toString().toLowerCase())) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

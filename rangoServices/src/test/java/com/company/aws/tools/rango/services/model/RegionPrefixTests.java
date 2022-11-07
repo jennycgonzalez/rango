@@ -8,6 +8,8 @@ import org.junit.jupiter.api.Test;
 public class RegionPrefixTests {
 	
 	public final String INVALID_REGION_PREFIX = "IL";
+	public final String VALID_TEST_REGION = "ap-northeast-3";
+	
 
 	@Test
 	void isValid_returnsFalse_whenRegionPrefixIsInvalid() {
@@ -22,6 +24,11 @@ public class RegionPrefixTests {
 	@Test
 	void startsWithValidPrefix_returnsFalse_whenRegion_DoesNotStartWithValidPrefix() {
 		assertFalse(RegionPrefix.startsWithValidPrefix(INVALID_REGION_PREFIX));
+	}
+	
+	@Test
+	void startsWithValidPrefix_returnsTrue_whenRegion_startsWithValidPrefix() {
+		assertTrue(RegionPrefix.startsWithValidPrefix(VALID_TEST_REGION));
 	}
 	
 }
