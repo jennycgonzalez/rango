@@ -20,7 +20,7 @@ public class IpRangeController {
 	public static final String MEDIA_TYPE_TEXT_PLAIN = "text/plain;charset=ISO-8859-1";
 	public static final String PARAM_REGION_NAME = "region";
 	public static final String REQUEST_ERROR_PREFIX = "There was a problem with the request to amazon aws. Reason: ";
-	public static final String PARAM_BLANK_ERROR_PREFIX = "The following parameter must be not empty or null: ";
+	public static final String REGION_BLANK_ERROR = "The parameter region must be neither empty nor null.";
 	public static final String INVALID_REGION_ERROR_PREFIX = "The given region is invalid: ";
 	
 	@Autowired
@@ -37,7 +37,7 @@ public class IpRangeController {
 	
 	private String getIpRangesByRegion(String region) {
 		if(StringUtils.isBlank(region)) {
-			return paramIsBlankError(PARAM_REGION_NAME);
+			return REGION_BLANK_ERROR;
 		}
 		if(!Region.isValid(region)) {
 			return invalidRegionError(region);
@@ -69,8 +69,4 @@ public class IpRangeController {
 		return INVALID_REGION_ERROR_PREFIX + region;
 	}
 
-	private String paramIsBlankError(String name) {
-		return PARAM_BLANK_ERROR_PREFIX + name;
-	}
-	
 }

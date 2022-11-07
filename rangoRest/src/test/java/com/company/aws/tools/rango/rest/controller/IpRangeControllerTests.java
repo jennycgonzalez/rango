@@ -62,7 +62,7 @@ class IpRangeControllerTests {
 		   .param(IpRangeController.PARAM_REGION_NAME, StringUtils.EMPTY)
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		   .andExpect(content().string(containsString(IpRangeController.PARAM_BLANK_ERROR_PREFIX)));
+		   .andExpect(content().string(containsString(IpRangeController.REGION_BLANK_ERROR)));
 	}
 	
 	@Test
@@ -96,13 +96,13 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-				.param(IpRangeController.PARAM_REGION_NAME, Region.US.toString())
-				.contentType(MediaType.ALL))
-		.andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
-		.andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_C))))
-		.andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_D))));
+		   .param(IpRangeController.PARAM_REGION_NAME, Region.US.toString())
+		   .contentType(MediaType.ALL))
+		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
+		   .andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_C))))
+		   .andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_D))));
 	}
 	
 	@Test
@@ -111,13 +111,13 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-				.param(IpRangeController.PARAM_REGION_NAME, Region.ALL.toString())
-				.contentType(MediaType.ALL))
-		.andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_CA_C)))
-		.andExpect(content().string(containsString(TEST_IP4PREFIX_CA_D)));
+		   .param(IpRangeController.PARAM_REGION_NAME, Region.ALL.toString())
+		   .contentType(MediaType.ALL))
+		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_CA_C)))
+		   .andExpect(content().string(containsString(TEST_IP4PREFIX_CA_D)));
 	}
 	
 	private IpRanges createIpRangesWithRegions(String regionA, String regionC) {
