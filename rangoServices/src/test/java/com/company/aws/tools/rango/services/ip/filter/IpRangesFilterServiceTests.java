@@ -14,8 +14,8 @@ import com.company.aws.tools.rango.services.model.Ip4Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
 import com.company.aws.tools.rango.services.model.Region;
 
-@SpringBootTest(classes = {IpRangesFilter.class})
-public class IpRangesFilterTests {
+@SpringBootTest(classes = {IpRangesFilterService.class})
+public class IpRangesFilterServiceTests {
 	
 	public static final String INVALID_REGION = "DUMMY_REGION";
 	public static final String TEST_REGION_US = "us-west-2";
@@ -26,7 +26,7 @@ public class IpRangesFilterTests {
 	public static final String TEST_IP4PREFIX_CA_D = "52.93.178.219/32";
 	
 	@Autowired
-	private IpRangesFilter filter;
+	private IpRangesFilterService filter;
 
 	@Test
 	void filterByRegion_returnsResult_containingIp4Prefix_fromRegion() {

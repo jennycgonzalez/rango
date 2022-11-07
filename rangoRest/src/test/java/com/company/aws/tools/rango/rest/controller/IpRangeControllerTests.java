@@ -20,11 +20,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.company.aws.tools.rango.services.amazon.client.AmazonAWSClientService;
 import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
+import com.company.aws.tools.rango.services.ip.filter.IpRangesFilterService;
 import com.company.aws.tools.rango.services.model.Ip4Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
 import com.company.aws.tools.rango.services.model.Region;
 
-@SpringBootTest(classes = {IpRangeController.class})
+@SpringBootTest(classes = {IpRangeController.class, IpRangesFilterService.class})
 @AutoConfigureMockMvc 
 class IpRangeControllerTests {
 	

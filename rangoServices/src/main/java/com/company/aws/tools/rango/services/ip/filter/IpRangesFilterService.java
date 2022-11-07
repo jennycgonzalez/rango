@@ -11,7 +11,7 @@ import com.company.aws.tools.rango.services.model.IpRanges;
 import com.company.aws.tools.rango.services.model.Region;
 
 @Service
-public class IpRangesFilter {
+public class IpRangesFilterService {
 	
 	public String filterByRegion(IpRanges ipRanges, String region) {
 		return Region.ALL.toString().equals(region) ? getAllIp4Prefixes(ipRanges) 
