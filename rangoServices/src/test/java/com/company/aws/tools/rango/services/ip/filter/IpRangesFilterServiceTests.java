@@ -37,6 +37,8 @@ public class IpRangesFilterServiceTests {
 	public static final String TEST_IP6PREFIX_EU_B = "2a09:d07a:a002::/60";
 	public static final String TEST_IP6PREFIX_AP_C = "2406:da1b::/36";
 	public static final String TEST_IP6PREFIX_AP_D = "2408:da1b::/66";
+	public static final String TEST_INVALID_IP6PREFIX_IL_C = "2a05:d050:2000::/40";
+	public static final String TEST_INVALID_IP6PREFIX_IL_D = "2600:9000:ddd::/48";
 	
 	@Autowired
 	private IpRangesFilterService filter;
@@ -76,7 +78,7 @@ public class IpRangesFilterServiceTests {
 	}
 	
 	@Test
-	void filterByRegion_returnsResult_WithoutIp4PrefixesThatDoNotHaveValidPrefixRegion_whenInputEqualsAll() {
+	void filterByRegion_returnsResult_withoutIp4PrefixesThatHaveInvalidPrefixRegion_whenInputEqualsAll() {
 		IpRanges ipRanges = createIpRangesWithIp4PrefixesWithValidAndInvalidRegions(TEST_REGION_US, INVALID_TEST_REGION_IL);
 		
 		String result = filter.filterByRegionPrefix(ipRanges, IpRangesFilterService.ALL_REGIONS);
@@ -131,6 +133,19 @@ public class IpRangesFilterServiceTests {
 		assertResultDoesNotContain(result, TEST_IP6PREFIX_AP_D);
 	}
 	
+	@Test
+	void filterByRegion_returnsResult_withoutIp6PrefixesThatHaveInvalidPrefixRegion_whenInputEqualsAll() {
+		IpRanges ipRanges = createIpRangesWithIp6PrefixesWithValidAndInvalidRegions(TEST_REGION_US, INVALID_TEST_REGION_IL);
+		
+		String result = filter.filterByRegionPrefix(ipRanges, IpRangesFilterService.ALL_REGIONS);
+		
+		assertResultContains(result, TEST_IP6PREFIX_EU_A);
+		assertResultContains(result, TEST_IP6PREFIX_EU_B);
+		assertResultDoesNotContain(result, TEST_INVALID_IP4PREFIX_IL_C);
+		assertResultDoesNotContain(result, TEST_INVALID_IP4PREFIX_IL_D);
+	}
+	
+	
 	private IpRanges createIpRangesWithIp6PrefixesWithRegion(String region) {
 		IpRanges ipRanges = createBasisIpRanges();
 		List<Ip6Prefix> prefixes = createIp6PrefixListAB(region);
@@ -158,6 +173,15 @@ public class IpRangesFilterServiceTests {
 		prefixes.addAll(createIp4PrefixListInvalidRegion(regionC));
 		ipRanges.setPrefixes(prefixes);
 		ipRanges.setIpv6_prefixes(Collections.emptyList());
+		return ipRanges;
+	}
+	
+	private IpRanges createIpRangesWithIp6PrefixesWithValidAndInvalidRegions(String regionA, String regionC) {
+		IpRanges ipRanges = createBasisIpRanges();
+		List<Ip6Prefix> prefixes = createIp6PrefixListAB(regionA);
+		prefixes.addAll(createIp6PrefixListInvalidRegion(regionC));
+		ipRanges.setPrefixes(Collections.emptyList());
+		ipRanges.setIpv6_prefixes(prefixes);
 		return ipRanges;
 	}
 	
@@ -213,6 +237,13 @@ public class IpRangesFilterServiceTests {
 		List<Ip4Prefix> prefixes = new ArrayList<>();
 		prefixes.add(createIp4Prefix(TEST_INVALID_IP4PREFIX_IL_C, region));
 		prefixes.add(createIp4Prefix(TEST_INVALID_IP4PREFIX_IL_D, region));
+		return prefixes;
+	}
+	
+	private List<Ip6Prefix> createIp6PrefixListInvalidRegion(String region) {
+		List<Ip6Prefix> prefixes = new ArrayList<>();
+		prefixes.add(createIp6Prefix(TEST_INVALID_IP6PREFIX_IL_C, region));
+		prefixes.add(createIp6Prefix(TEST_INVALID_IP6PREFIX_IL_D, region));
 		return prefixes;
 	}
 	
