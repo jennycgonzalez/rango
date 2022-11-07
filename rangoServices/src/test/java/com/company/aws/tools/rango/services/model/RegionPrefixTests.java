@@ -21,7 +21,7 @@ public class RegionPrefixTests {
 	
 	@Test
 	void startsWithValidPrefix_returnsFalse_whenRegion_DoesNotStartWithValidPrefix() {
-		
+		assertFalse(RegionPrefix.startsWithValidPrefix(INVALID_REGION_PREFIX));
 	}
 	
 }

@@ -10,7 +10,7 @@ import com.company.aws.tools.rango.services.amazon.client.AmazonAWSClientService
 import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
 import com.company.aws.tools.rango.services.ip.filter.IpRangesFilterService;
 import com.company.aws.tools.rango.services.model.IpRanges;
-import com.company.aws.tools.rango.services.model.Region;
+import com.company.aws.tools.rango.services.model.RegionPrefix;
 
 @RestController
 public class IpRangeController {
@@ -28,9 +28,9 @@ public class IpRangeController {
 	private IpRangesFilterService filter;
 	
 	@GetMapping(path = Routes.FIND_BY_REGION,  produces = {MEDIA_TYPE_TEXT_PLAIN})
-	public String findIpRangesByRegion(@RequestParam(value = PARAM_REGION_NAME, required = false) String region) {
+	public String findIpRangesByRegion(@RequestParam(value = PARAM_REGION_NAME, required = false) String inputRegion) {
 		try {
-			return getIpRangesByRegion(region);
+			return getIpRangesByRegion(inputRegion);
 		} catch(AmazonAWSClientException ex) {
 			return requestError(ex.getMessage());
 		}
@@ -40,7 +40,7 @@ public class IpRangeController {
 		if(StringUtils.isBlank(region)) {
 			return REGION_BLANK_ERROR;
 		}
-		if(!Region.isValid(region)) {
+		if(!RegionPrefix.isValid(region) && !IpRangesFilterService.ALL_REGIONS.equals(region)) {
 			return invalidRegionError(region);
 		}
 		IpRanges ipRanges = amazonClient.getIpRanges();

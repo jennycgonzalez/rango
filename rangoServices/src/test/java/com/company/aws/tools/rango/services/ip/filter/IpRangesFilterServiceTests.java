@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class IpRangesFilterServiceTests {
 	void filterByRegion_returnsAllIp4Prefixes_whenRegionEqualsAll() {
 		IpRanges ipRanges = createIpRangesWithIp4PrefixesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
-		String result = filter.filterByRegion(ipRanges, RegionPrefix.ALL.toString());
+		String result = filter.filterByRegion(ipRanges, IpRangesFilterService.ALL_REGIONS);
 		
 		assertResultContains(result, TEST_IP4PREFIX_US_A);
 		assertResultContains(result, TEST_IP4PREFIX_US_B);
@@ -76,7 +75,7 @@ public class IpRangesFilterServiceTests {
 	void filterByRegion_returnsResultWithIp4PrefixesTitel() {
 		IpRanges ipRanges = createIpRangesWithIp4PrefixesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
-		String result = filter.filterByRegion(ipRanges, RegionPrefix.ALL.toString());
+		String result = filter.filterByRegion(ipRanges, IpRangesFilterService.ALL_REGIONS);
 		
 		assertResultContains(result, IpRangesFilterService.IP4PREFIXES_TITEL);
 	}
@@ -95,7 +94,7 @@ public class IpRangesFilterServiceTests {
 	void filterByRegion_returnsAllIp6Prefixes_whenRegionEqualsAll() {
 		IpRanges ipRanges = createIpRangesWithIp6PrefixesWithRegions(TEST_REGION_EU, TEST_REGION_AP);
 		
-		String result = filter.filterByRegion(ipRanges, RegionPrefix.ALL.toString());
+		String result = filter.filterByRegion(ipRanges, IpRangesFilterService.ALL_REGIONS);
 		
 		assertResultContains(result, TEST_IP6PREFIX_EU_A);
 		assertResultContains(result, TEST_IP6PREFIX_EU_B);

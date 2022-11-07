@@ -9,16 +9,17 @@ import org.springframework.stereotype.Service;
 import com.company.aws.tools.rango.services.model.Ip4Prefix;
 import com.company.aws.tools.rango.services.model.Ip6Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
-import com.company.aws.tools.rango.services.model.RegionPrefix;
 
 @Service
 public class IpRangesFilterService {
 	
 	public static final String IP4PREFIXES_TITEL = "---- Ip4 prefixes ---";
 	public static final String IP6PREFIXES_TITEL = "---- Ip6 prefixes ---";
+	public static final String ALL_REGIONS = "ALL";
+	
 	
 	public String filterByRegion(IpRanges ipRanges, String region) {
-		return RegionPrefix.ALL.toString().equals(region) ? getAllIpRangesWithIp4Prefixes(ipRanges) 
+		return ALL_REGIONS.equals(region) ? getAllIpRangesWithIp4Prefixes(ipRanges) 
 				: filterIpRangesByRegion(ipRanges, region);
 	}
 	

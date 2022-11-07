@@ -23,7 +23,7 @@ import com.company.aws.tools.rango.services.exceptions.AmazonAWSClientException;
 import com.company.aws.tools.rango.services.ip.filter.IpRangesFilterService;
 import com.company.aws.tools.rango.services.model.Ip4Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
-import com.company.aws.tools.rango.services.model.Region;
+import com.company.aws.tools.rango.services.model.RegionPrefix;
 
 @SpringBootTest(classes = {IpRangeController.class, IpRangesFilterService.class})
 @AutoConfigureMockMvc 
@@ -49,7 +49,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenThrow(AmazonAWSClientException.class);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION_NAME, Region.AF.toString())
+		   .param(IpRangeController.PARAM_REGION_NAME, RegionPrefix.AF.toString())
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(IpRangeController.REQUEST_ERROR_PREFIX)));
@@ -85,7 +85,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION_NAME, Region.US.toString())
+		   .param(IpRangeController.PARAM_REGION_NAME, RegionPrefix.US.toString())
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
@@ -98,7 +98,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION_NAME, Region.US.toString())
+		   .param(IpRangeController.PARAM_REGION_NAME, RegionPrefix.US.toString())
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
@@ -113,7 +113,7 @@ class IpRangeControllerTests {
 		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
 		
 		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION_NAME, Region.ALL.toString())
+		   .param(IpRangeController.PARAM_REGION_NAME, IpRangesFilterService.ALL_REGIONS)
 		   .contentType(MediaType.ALL))
 		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
 		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
