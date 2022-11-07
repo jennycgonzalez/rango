@@ -21,16 +21,20 @@ public class IpRangesFilterService {
 	
 	public String filterByRegionPrefix(IpRanges ipRanges, String regionPrefix) {
 		return ALL_REGIONS.equals(regionPrefix) ? getAllIpRangesFromValidRegions(ipRanges) 
-				: filterIpRangesByRegion(ipRanges, regionPrefix);
+				: filterIpRangesByRegionPrefix(ipRanges, regionPrefix);
 	}
 	
 	
 	private String getAllIpRangesFromValidRegions(IpRanges ipRanges) {
 		StringBuilder builder = new StringBuilder();
+		builder.append(IP4PREFIXES_TITEL);
+		builder.append("\n");
 		builder.append(getAllIpRangesWithIp4Prefixes(ipRanges));
+		builder.append("\n");
+		builder.append(IP6PREFIXES_TITEL);
+		builder.append("\n");
 		builder.append(getAllIpRangesWithIp6Prefixes(ipRanges));
 		return builder.toString();
-		
 	}
 	
 	private String getAllIpRangesWithIp4Prefixes(IpRanges ipRanges) {
@@ -38,7 +42,7 @@ public class IpRangesFilterService {
 				.filter(p -> RegionPrefix.startsWithValidPrefix(p.getRegion()))
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
-		return IP4PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
+		return StringUtils.join(prefixes, "\n");
 	}
 	
 	private String getAllIpRangesWithIp6Prefixes(IpRanges ipRanges) {
@@ -46,10 +50,10 @@ public class IpRangesFilterService {
 				.filter(p -> RegionPrefix.startsWithValidPrefix(p.getRegion()))
 				.map(Ip6Prefix::getIpv6_prefix)
 				.collect(Collectors.toList());
-		return IP6PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
+		return StringUtils.join(prefixes, "\n");
 	}
 
-	private String filterIpRangesByRegion(IpRanges ipRanges, String region) {
+	private String filterIpRangesByRegionPrefix(IpRanges ipRanges, String region) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(IP4PREFIXES_TITEL);
 		builder.append("\n");
