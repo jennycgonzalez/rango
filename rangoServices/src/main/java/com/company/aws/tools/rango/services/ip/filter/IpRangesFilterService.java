@@ -27,13 +27,15 @@ public class IpRangesFilterService {
 		List<String> prefixes = ipRanges.getPrefixes().stream()
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
-		return buildIp4PrefixesResult(prefixes);
+		return IP4PREFIXES_TITEL + "\n" + StringUtils.join(prefixes, "\n");
 	}
 
 	private String filterIpRangesByRegion(IpRanges ipRanges, String region) {
 		StringBuilder builder = new StringBuilder();
+		builder.append(IP4PREFIXES_TITEL).append("/n");
 		builder.append(filterIpRangesWithIp4PrefixByRegion(ipRanges, region));
 		builder.append("/n");
+		builder.append(IP6PREFIXES_TITEL).append("/n");
 		builder.append(filterIp6PrefixesRangesByRegion(ipRanges, region));
 		return builder.toString();
 	}
@@ -43,7 +45,7 @@ public class IpRangesFilterService {
 				.filter(p -> p.getRegion().startsWith(region.toLowerCase()))
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
-		return buildIp4PrefixesResult(prefixes);
+		return StringUtils.join(prefixes, "\n");
 	}
 	
 	private String filterIp6PrefixesRangesByRegion(IpRanges ipRanges, String region) {
@@ -51,15 +53,7 @@ public class IpRangesFilterService {
 				.filter(p -> p.getRegion().startsWith(region.toLowerCase()))
 				.map(Ip6Prefix::getIpv6_prefix)
 				.collect(Collectors.toList());
-		return buildIp6PrefixesResult(prefixes);
-	}
-	
-	private String buildIp4PrefixesResult(List<String> prefixes) {
-		return IP4PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
-	}
-	
-	private String buildIp6PrefixesResult(List<String> prefixes) {
-		return IP6PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
+		return StringUtils.join(prefixes, "\n");
 	}
 	
 }
