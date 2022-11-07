@@ -34,8 +34,8 @@ public class IpRangesFilterServiceTests {
 		
 		String result = filter.filterByRegion(ipRanges, Region.US.toString());
 		
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_A);
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_B);
+		assertResultContains(result, TEST_IP4PREFIX_US_A);
+		assertResultContains(result, TEST_IP4PREFIX_US_B);
 	}
 	
 	@Test
@@ -44,8 +44,8 @@ public class IpRangesFilterServiceTests {
 		
 		String result = filter.filterByRegion(ipRanges, Region.US.toString());
 		
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_A);
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_B);
+		assertResultContains(result, TEST_IP4PREFIX_US_A);
+		assertResultContains(result, TEST_IP4PREFIX_US_B);
 		assertResultDoesNotContainPrefix(result, TEST_IP4PREFIX_CA_C);
 		assertResultDoesNotContainPrefix(result, TEST_IP4PREFIX_CA_D);
 	}
@@ -56,10 +56,19 @@ public class IpRangesFilterServiceTests {
 		
 		String result = filter.filterByRegion(ipRanges, Region.ALL.toString());
 		
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_A);
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_B);
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_CA_C);
-		assertResultContainsPrefix(result, TEST_IP4PREFIX_CA_D);
+		assertResultContains(result, TEST_IP4PREFIX_US_A);
+		assertResultContains(result, TEST_IP4PREFIX_US_B);
+		assertResultContains(result, TEST_IP4PREFIX_CA_C);
+		assertResultContains(result, TEST_IP4PREFIX_CA_D);
+	}
+	
+	@Test
+	void filterByRegion_returnsResultWithTitel() {
+		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
+		
+		String result = filter.filterByRegion(ipRanges, Region.ALL.toString());
+		
+		assertResultContains(result, IpRangesFilterService.IP4PREFIXES_TITEL);
 	}
 	
 	private void assertResultDoesNotContainPrefix(String result, String testIp4prefixCaD) {
@@ -74,7 +83,7 @@ public class IpRangesFilterServiceTests {
 		return ipRanges;
 	}
 	
-	private void assertResultContainsPrefix(String result, String testIp4prefixUsA) {
+	private void assertResultContains(String result, String testIp4prefixUsA) {
 		assertTrue(result.contains(testIp4prefixUsA));
 	}
 

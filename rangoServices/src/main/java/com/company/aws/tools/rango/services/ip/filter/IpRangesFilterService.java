@@ -13,6 +13,8 @@ import com.company.aws.tools.rango.services.model.Region;
 @Service
 public class IpRangesFilterService {
 	
+	public static final String IP4PREFIXES_TITEL = "---- Ip4 prefixes ---";
+	
 	public String filterByRegion(IpRanges ipRanges, String region) {
 		return Region.ALL.toString().equals(region) ? getAllIp4Prefixes(ipRanges) 
 				: filterIp4PrefixesRangesByRegion(ipRanges, region);
