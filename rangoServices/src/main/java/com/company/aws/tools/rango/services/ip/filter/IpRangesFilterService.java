@@ -18,9 +18,9 @@ public class IpRangesFilterService {
 	public static final String ALL_REGIONS = "ALL";
 	
 	
-	public String filterByRegion(IpRanges ipRanges, String region) {
-		return ALL_REGIONS.equals(region) ? getAllIpRangesWithIp4Prefixes(ipRanges) 
-				: filterIpRangesByRegion(ipRanges, region);
+	public String filterByRegionPrefix(IpRanges ipRanges, String regionPrefix) {
+		return ALL_REGIONS.equals(regionPrefix) ? getAllIpRangesWithIp4Prefixes(ipRanges) 
+				: filterIpRangesByRegion(ipRanges, regionPrefix);
 	}
 	
 	
@@ -30,6 +30,7 @@ public class IpRangesFilterService {
 	
 	private String getAllIpRangesWithIp4Prefixes(IpRanges ipRanges) {
 		List<String> prefixes = ipRanges.getPrefixes().stream()
+				//.filter(p -> RegionPrefix.startsWithValidPrefix(p.getRegion()))
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
 		return IP4PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
