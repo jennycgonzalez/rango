@@ -49,6 +49,18 @@ public class IpRangesFilterTests {
 		assertResultDoesNotContainPrefix(result, TEST_IP4PREFIX_CA_D);
 	}
 	
+	@Test
+	void filterByRegion_returnsAllIp4Prefixes_whenRegionEqualsAll() {
+		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
+		
+		String result = filter.filterByRegion(ipRanges, TEST_REGION_US);
+		
+		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_A);
+		assertResultContainsPrefix(result, TEST_IP4PREFIX_US_B);
+		assertResultContainsPrefix(result, TEST_IP4PREFIX_CA_C);
+		assertResultContainsPrefix(result, TEST_IP4PREFIX_CA_D);
+	}
+	
 	private void assertResultDoesNotContainPrefix(String result, String testIp4prefixCaD) {
 		assertFalse(result.contains(testIp4prefixCaD));		
 	}
