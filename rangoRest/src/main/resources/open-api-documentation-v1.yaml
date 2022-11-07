@@ -19,12 +19,11 @@ paths:
       tags:
         - ip-range
       summary: Finds ip-ranges by region
-      description: Multiple region values can be provided with comma separated strings
       operationId: findIpRangesByRegion
       parameters:
         - name: region
           in: query
-          description: Region values that need to be considered for filter
+          description: Region value that need to be considered for filter
           required: true
           schema:
             type: string
@@ -35,58 +34,8 @@ paths:
               - CN
               - SA
               - AF
-              - CA          
+              - CA
+              - ALL          
       responses:
         '200':
-          description: successful operation
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IpRange'          
-        '400':
-          description: Invalid region value
-  /ip-range/findByIpFormat:
-    get:
-      tags:
-        - ip-range
-      summary: Finds ip-ranges by ip format
-      operationId: findIpRangesByIpFormat
-      parameters:
-        - name: ipFormat
-          in: query
-          description: ipFormat to filter by
-          required: true
-          schema:
-            type: string
-            enum:
-              - Ipv4
-              - Ipv6
-      responses:
-        '200':
-          description: successful operation
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IpRange'
-        '400':
-          description: Invalid ip format value
-components:
-  schemas:
-    IpRange:
-      type: object
-      properties:
-        ipPrefix:
-          type: string
-          example: 3.5.140.0/22
-        region:
-          type: string
-          example: us-west-2
-        service:
-          type: string
-          example: AMAZON
-        networkBorderGroup:
-          type: string
+           description: successful operation
