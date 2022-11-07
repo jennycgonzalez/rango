@@ -177,8 +177,8 @@ public class IpRangesFilterServiceTests {
 		return prefixes;
 	}
 
-	private void assertResultContains(String result, String testIp4prefixUsA) {
-		assertTrue(result.contains(testIp4prefixUsA));
+	private void assertResultContains(String result, String value) {
+		assertTrue(result.contains(value));
 	}
 
 	private IpRanges createIpRangesWithIp4PrefixesWithRegion(String region) {
