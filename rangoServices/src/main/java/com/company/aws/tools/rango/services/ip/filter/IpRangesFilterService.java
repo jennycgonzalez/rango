@@ -27,7 +27,6 @@ public class IpRangesFilterService {
 		return buildIp4PrefixesResult(prefixes);
 	}
 
-
 	private String filterIp4PrefixesRangesByRegion(IpRanges ipRanges, String region) {
 		List<String> prefixes =  ipRanges.getPrefixes().stream()
 				.filter(p -> p.getRegion().startsWith(region.toLowerCase()))

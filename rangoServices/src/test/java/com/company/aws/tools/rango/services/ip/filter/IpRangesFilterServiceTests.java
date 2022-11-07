@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.company.aws.tools.rango.services.model.Ip4Prefix;
+import com.company.aws.tools.rango.services.model.Ip6Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
 import com.company.aws.tools.rango.services.model.Region;
 
@@ -19,18 +20,25 @@ public class IpRangesFilterServiceTests {
 	
 	public static final String INVALID_REGION = "DUMMY_REGION";
 	public static final String TEST_REGION_US = "us-west-2";
-	public static final String TEST_REGION_CA = "ca-south-1";
+	public static final String TEST_REGION_CA = "ca-south-1";	
 	public static final String TEST_IP4PREFIX_US_A = "3.2.34.0/26";
 	public static final String TEST_IP4PREFIX_US_B = "13.34.65.64/27";
 	public static final String TEST_IP4PREFIX_CA_C = "3.108.0.0/14";
 	public static final String TEST_IP4PREFIX_CA_D = "52.93.178.219/32";
+	
+	public static final String TEST_REGION_EU = "eu-south-1";
+	public static final String TEST_REGION_AP = "ap-south-2";
+	public static final String TEST_IP6PREFIX_EU_A = "2a05:d07a:a000::/40";
+	public static final String TEST_IP6PREFIX_EU_B = "2a09:d07a:a002::/60";
+	public static final String TEST_IP6PREFIX_AP_C = "2406:da1b::/36";
+	public static final String TEST_IP6PREFIX_AP_D = "2408:da1b::/66";
 	
 	@Autowired
 	private IpRangesFilterService filter;
 
 	@Test
 	void filterByRegion_returnsResult_containingIp4Prefix_fromRegion() {
-		IpRanges ipRanges = createIpRangesWithRegion(TEST_REGION_US);
+		IpRanges ipRanges = createIpRangesWithIp4PrefixesWithRegion(TEST_REGION_US);
 		
 		String result = filter.filterByRegion(ipRanges, Region.US.toString());
 		
@@ -40,7 +48,7 @@ public class IpRangesFilterServiceTests {
 	
 	@Test
 	void filterByRegion_returnsResult_WithoutIp4PrefixesThatAreNotFromRegion() {
-		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
+		IpRanges ipRanges = createIpRangesWithIp4PrefixesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
 		String result = filter.filterByRegion(ipRanges, Region.US.toString());
 		
@@ -52,7 +60,7 @@ public class IpRangesFilterServiceTests {
 	
 	@Test
 	void filterByRegion_returnsAllIp4Prefixes_whenRegionEqualsAll() {
-		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
+		IpRanges ipRanges = createIpRangesWithIp4PrefixesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
 		String result = filter.filterByRegion(ipRanges, Region.ALL.toString());
 		
@@ -64,18 +72,35 @@ public class IpRangesFilterServiceTests {
 	
 	@Test
 	void filterByRegion_returnsResultWithIp4PrefixesTitel() {
-		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
+		IpRanges ipRanges = createIpRangesWithIp4PrefixesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
 		String result = filter.filterByRegion(ipRanges, Region.ALL.toString());
 		
 		assertResultContains(result, IpRangesFilterService.IP4PREFIXES_TITEL);
 	}
 	
+	@Test
+	void filterByRegion_returnsResult_containingIp6Prefix_fromRegion() {
+		IpRanges ipRanges = createIpRangesWithIp6PrefixesWithRegion(TEST_REGION_EU);
+		
+		String result = filter.filterByRegion(ipRanges, Region.EU.toString());
+		
+		assertResultContains(result, TEST_IP6PREFIX_EU_A);
+		assertResultContains(result, TEST_IP6PREFIX_EU_B);
+	}
+	
+	private IpRanges createIpRangesWithIp6PrefixesWithRegion(String region) {
+		IpRanges ipRanges = createBasisIpRanges();
+		List<Ip6Prefix> prefixes = createIp6PrefixListAB(region);
+		ipRanges.setIpv6_prefixes(prefixes);
+		return ipRanges;
+	}
+
 	private void assertResultDoesNotContainPrefix(String result, String testIp4prefixCaD) {
 		assertFalse(result.contains(testIp4prefixCaD));		
 	}
 
-	private IpRanges createIpRangesWithRegions(String regionA, String regionC) {
+	private IpRanges createIpRangesWithIp4PrefixesWithRegions(String regionA, String regionC) {
 		IpRanges ipRanges = createBasisIpRanges();
 		List<Ip4Prefix> prefixes = createIp4PrefixListAB(regionA);
 		prefixes.addAll(createIp4PrefixListCD(regionC));
@@ -87,7 +112,7 @@ public class IpRangesFilterServiceTests {
 		assertTrue(result.contains(testIp4prefixUsA));
 	}
 
-	private IpRanges createIpRangesWithRegion(String region) {
+	private IpRanges createIpRangesWithIp4PrefixesWithRegion(String region) {
 		IpRanges ipRanges = createBasisIpRanges();
 		ipRanges.setPrefixes(createIp4PrefixListAB(region));
 		return ipRanges;
@@ -120,5 +145,18 @@ public class IpRangesFilterServiceTests {
 		prefix.setRegion(region);
 		return prefix;
 	}
+	
+	private Ip6Prefix createIp6Prefix(String ip6_prefix, String region) {
+		Ip6Prefix prefix = new Ip6Prefix();
+		prefix.setIpv6_prefix(ip6_prefix);
+		prefix.setRegion(region);
+		return prefix;
+	}
 
+	private List<Ip6Prefix> createIp6PrefixListAB(String region) {
+		List<Ip6Prefix> prefixes = new ArrayList<>();
+		prefixes.add(createIp6Prefix(TEST_IP6PREFIX_EU_A, region));
+		prefixes.add(createIp6Prefix(TEST_IP6PREFIX_EU_B, region));
+		return prefixes;
+	}
 }
