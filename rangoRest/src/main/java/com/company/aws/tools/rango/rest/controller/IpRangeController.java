@@ -43,10 +43,14 @@ public class IpRangeController {
 			return invalidRegionError(region);
 		}
 		IpRanges ipRanges = amazonClient.getIpRanges();
-		return Region.ALL.toString().equals(region) ? getAllIp4Prefixes(ipRanges) : ipRangesFilteredBy(ipRanges, region);
+		return filterIpRanges(ipRanges, region);
+	}
+	
+	private String filterIpRanges(IpRanges ipRanges, String region) {
+		return Region.ALL.toString().equals(region) ? getAllIp4Prefixes(ipRanges) : filterIpRangesByRegion(ipRanges, region);
 	}
 
-	private String ipRangesFilteredBy(IpRanges ipRanges, String region) {
+	private String filterIpRangesByRegion(IpRanges ipRanges, String region) {
 		List<String> prefixes =  ipRanges.getPrefixes().stream()
 				.filter(p -> p.getRegion().startsWith(region.toLowerCase()))
 				.map(Ip4Prefix::getIp_prefix)
