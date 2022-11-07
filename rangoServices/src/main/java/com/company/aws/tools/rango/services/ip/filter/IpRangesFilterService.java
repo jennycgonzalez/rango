@@ -24,7 +24,7 @@ public class IpRangesFilterService {
 		List<String> prefixes = ipRanges.getPrefixes().stream()
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
-		return StringUtils.join(prefixes, "\n");
+		return buildIp4PrefixesResult(prefixes);
 	}
 
 
@@ -33,7 +33,11 @@ public class IpRangesFilterService {
 				.filter(p -> p.getRegion().startsWith(region.toLowerCase()))
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
-		return StringUtils.join(prefixes, "\n");
+		return buildIp4PrefixesResult(prefixes);
+	}
+	
+	private String buildIp4PrefixesResult(List<String> prefixes) {
+		return IP4PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
 	}
 	
 }

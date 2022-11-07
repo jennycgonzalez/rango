@@ -63,7 +63,7 @@ public class IpRangesFilterServiceTests {
 	}
 	
 	@Test
-	void filterByRegion_returnsResultWithTitel() {
+	void filterByRegion_returnsResultWithIp4PrefixesTitel() {
 		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
 		
 		String result = filter.filterByRegion(ipRanges, Region.ALL.toString());
