@@ -35,7 +35,8 @@ paths:
               - CN
               - SA
               - AF
-              - CA          
+              - CA
+              - ALL          
       responses:
         '200':
           description: successful operation
@@ -47,33 +48,6 @@ paths:
                   $ref: '#/components/schemas/IpRange'          
         '400':
           description: Invalid region value
-  /ip-range/findByIpFormat:
-    get:
-      tags:
-        - ip-range
-      summary: Finds ip-ranges by ip format
-      operationId: findIpRangesByIpFormat
-      parameters:
-        - name: ipFormat
-          in: query
-          description: ipFormat to filter by
-          required: true
-          schema:
-            type: string
-            enum:
-              - Ipv4
-              - Ipv6
-      responses:
-        '200':
-          description: successful operation
-          content:
-            text/plain:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/IpRange'
-        '400':
-          description: Invalid ip format value
 components:
   schemas:
     IpRange:
