@@ -1,4 +1,4 @@
-package com.company.aws.tools.rango.rest.controller;
+package com.company.aws.tools.rango.services.model;
 
 public enum Region {
 	EU, US, AP, CN,
