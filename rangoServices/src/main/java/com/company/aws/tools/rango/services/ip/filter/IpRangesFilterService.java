@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.company.aws.tools.rango.services.model.Ip4Prefix;
 import com.company.aws.tools.rango.services.model.Ip6Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
+import com.company.aws.tools.rango.services.model.RegionPrefix;
 
 @Service
 public class IpRangesFilterService {
@@ -30,7 +31,7 @@ public class IpRangesFilterService {
 	
 	private String getAllIpRangesWithIp4Prefixes(IpRanges ipRanges) {
 		List<String> prefixes = ipRanges.getPrefixes().stream()
-				//.filter(p -> RegionPrefix.startsWithValidPrefix(p.getRegion()))
+				.filter(p -> RegionPrefix.startsWithValidPrefix(p.getRegion()))
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
 		return IP4PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
