@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -93,6 +94,7 @@ public class IpRangesFilterServiceTests {
 		IpRanges ipRanges = createBasisIpRanges();
 		List<Ip6Prefix> prefixes = createIp6PrefixListAB(region);
 		ipRanges.setIpv6_prefixes(prefixes);
+		ipRanges.setPrefixes(Collections.emptyList());
 		return ipRanges;
 	}
 
@@ -105,6 +107,7 @@ public class IpRangesFilterServiceTests {
 		List<Ip4Prefix> prefixes = createIp4PrefixListAB(regionA);
 		prefixes.addAll(createIp4PrefixListCD(regionC));
 		ipRanges.setPrefixes(prefixes);
+		ipRanges.setIpv6_prefixes(Collections.emptyList());
 		return ipRanges;
 	}
 	
@@ -115,6 +118,7 @@ public class IpRangesFilterServiceTests {
 	private IpRanges createIpRangesWithIp4PrefixesWithRegion(String region) {
 		IpRanges ipRanges = createBasisIpRanges();
 		ipRanges.setPrefixes(createIp4PrefixListAB(region));
+		ipRanges.setIpv6_prefixes(Collections.emptyList());
 		return ipRanges;
 	}
 	
