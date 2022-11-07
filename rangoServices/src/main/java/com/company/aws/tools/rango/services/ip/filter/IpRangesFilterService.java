@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import com.company.aws.tools.rango.services.model.Ip4Prefix;
 import com.company.aws.tools.rango.services.model.Ip6Prefix;
 import com.company.aws.tools.rango.services.model.IpRanges;
-import com.company.aws.tools.rango.services.model.Region;
+import com.company.aws.tools.rango.services.model.RegionPrefix;
 
 @Service
 public class IpRangesFilterService {
@@ -18,10 +18,14 @@ public class IpRangesFilterService {
 	public static final String IP6PREFIXES_TITEL = "---- Ip6 prefixes ---";
 	
 	public String filterByRegion(IpRanges ipRanges, String region) {
-		return Region.ALL.toString().equals(region) ? getAllIpRangesWithIp4Prefixes(ipRanges) 
+		return RegionPrefix.ALL.toString().equals(region) ? getAllIpRangesWithIp4Prefixes(ipRanges) 
 				: filterIpRangesByRegion(ipRanges, region);
 	}
 	
+	
+//	private String getAllIpRangesFromValidRegions() {
+//		
+//	}
 	
 	private String getAllIpRangesWithIp4Prefixes(IpRanges ipRanges) {
 		List<String> prefixes = ipRanges.getPrefixes().stream()
@@ -42,9 +46,9 @@ public class IpRangesFilterService {
 		return builder.toString();
 	}
 	
-	private String filterIpRangesWithIp4PrefixByRegion(IpRanges ipRanges, String region) {
+	private String filterIpRangesWithIp4PrefixByRegion(IpRanges ipRanges, String regionPrefix) {
 		List<String> prefixes =  ipRanges.getPrefixes().stream()
-				.filter(p -> p.getRegion().startsWith(region.toLowerCase()))
+				.filter(p -> p.getRegion().startsWith(regionPrefix.toLowerCase()))
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
 		return StringUtils.join(prefixes, "\n");
