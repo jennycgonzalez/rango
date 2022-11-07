@@ -27,15 +27,17 @@ public class IpRangesFilterService {
 		List<String> prefixes = ipRanges.getPrefixes().stream()
 				.map(Ip4Prefix::getIp_prefix)
 				.collect(Collectors.toList());
-		return IP4PREFIXES_TITEL + "\n" + StringUtils.join(prefixes, "\n");
+		return IP4PREFIXES_TITEL + StringUtils.join(prefixes, "\n");
 	}
 
 	private String filterIpRangesByRegion(IpRanges ipRanges, String region) {
 		StringBuilder builder = new StringBuilder();
-		builder.append(IP4PREFIXES_TITEL).append("/n");
+		builder.append(IP4PREFIXES_TITEL);
+		builder.append("\n");
 		builder.append(filterIpRangesWithIp4PrefixByRegion(ipRanges, region));
-		builder.append("/n");
-		builder.append(IP6PREFIXES_TITEL).append("/n");
+		builder.append("\n");
+		builder.append(IP6PREFIXES_TITEL);
+		builder.append("\n");
 		builder.append(filterIp6PrefixesRangesByRegion(ipRanges, region));
 		return builder.toString();
 	}

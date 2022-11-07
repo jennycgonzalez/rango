@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,6 +91,30 @@ public class IpRangesFilterServiceTests {
 		assertResultContains(result, TEST_IP6PREFIX_EU_B);
 	}
 	
+	@Test
+	void filterByRegion_returnsAllIp6Prefixes_whenRegionEqualsAll() {
+		IpRanges ipRanges = createIpRangesWithIp6PrefixesWithRegions(TEST_REGION_EU, TEST_REGION_AP);
+		
+		String result = filter.filterByRegion(ipRanges, Region.ALL.toString());
+		
+		assertResultContains(result, TEST_IP6PREFIX_EU_A);
+		assertResultContains(result, TEST_IP6PREFIX_EU_B);
+		assertResultContains(result, TEST_IP6PREFIX_AP_C);
+		assertResultContains(result, TEST_IP6PREFIX_AP_D);
+	}
+	
+	@Test
+	void filterByRegion_returnsResult_WithoutIp6PrefixesThatAreNotFromRegion() {
+		IpRanges ipRanges = createIpRangesWithIp6PrefixesWithRegions(TEST_REGION_EU, TEST_REGION_AP);
+		
+		String result = filter.filterByRegion(ipRanges, Region.EU.toString());
+		
+		assertResultContains(result, TEST_IP6PREFIX_EU_A);
+		assertResultContains(result, TEST_IP6PREFIX_EU_B);
+		assertResultDoesNotContainPrefix(result, TEST_IP6PREFIX_AP_C);
+		assertResultDoesNotContainPrefix(result, TEST_IP6PREFIX_AP_D);
+	}
+	
 	private IpRanges createIpRangesWithIp6PrefixesWithRegion(String region) {
 		IpRanges ipRanges = createBasisIpRanges();
 		List<Ip6Prefix> prefixes = createIp6PrefixListAB(region);
@@ -111,6 +136,22 @@ public class IpRangesFilterServiceTests {
 		return ipRanges;
 	}
 	
+	private IpRanges createIpRangesWithIp6PrefixesWithRegions(String regionA, String regionC) {
+		IpRanges ipRanges = createBasisIpRanges();
+		List<Ip6Prefix> prefixes = createIp6PrefixListAB(regionA);
+		prefixes.addAll(createIp6PrefixListCD(regionC));
+		ipRanges.setIpv6_prefixes(prefixes);
+		ipRanges.setPrefixes(Collections.emptyList());
+		return ipRanges;
+	}
+	
+	private List<Ip6Prefix> createIp6PrefixListCD(String regionC) {
+		List<Ip6Prefix> prefixes = new ArrayList<>();
+		prefixes.add(createIp6Prefix(TEST_IP6PREFIX_AP_C, regionC));
+		prefixes.add(createIp6Prefix(TEST_IP6PREFIX_AP_D, regionC));
+		return prefixes;
+	}
+
 	private void assertResultContains(String result, String testIp4prefixUsA) {
 		assertTrue(result.contains(testIp4prefixUsA));
 	}
