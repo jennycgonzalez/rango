@@ -1,12 +1,12 @@
 package com.company.aws.tools.rango.rest.controller;
 
 import static org.hamcrest.core.StringContains.containsString;
-import static org.hamcrest.core.IsNot.not;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -92,47 +92,10 @@ class IpRangeControllerTests {
 		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)));
 	}
 	
-	@Test
-	void findIpRangesByRegion_returnsTextWithoutEntriesThatAreNotFromRegion() throws Exception {
-		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
-		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
-		
-		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION_NAME, RegionPrefix.US.toString())
-		   .contentType(MediaType.ALL))
-		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
-		   .andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_C))))
-		   .andExpect(content().string(not(containsString(TEST_IP4PREFIX_CA_D))));
-	}
-	
-	@Test
-	void findIpRangesByRegion_returnsTextWithAllEntries_whenRegionEqualsAll() throws Exception {
-		IpRanges ipRanges = createIpRangesWithRegions(TEST_REGION_US, TEST_REGION_CA);
-		when(amazonClient.getIpRanges()).thenReturn(ipRanges);
-		
-		mvc.perform(get(Routes.FIND_BY_REGION)
-		   .param(IpRangeController.PARAM_REGION_NAME, IpRangesFilterService.ALL_REGIONS)
-		   .contentType(MediaType.ALL))
-		   .andExpect(content().contentType(IpRangeController.MEDIA_TYPE_TEXT_PLAIN))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_A)))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_US_B)))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_CA_C)))
-		   .andExpect(content().string(containsString(TEST_IP4PREFIX_CA_D)));
-	}
-	
-	private IpRanges createIpRangesWithRegions(String regionA, String regionC) {
-		IpRanges ipRanges = createBasisIpRanges();
-		List<Ip4Prefix> prefixes = createIp4PrefixListAB(regionA);
-		prefixes.addAll(createIp4PrefixListCD(regionC));
-		ipRanges.setPrefixes(prefixes);
-		return ipRanges;
-	}
-
 	private IpRanges createIpRangesWithRegion(String region) {
 		IpRanges ipRanges = createBasisIpRanges();
 		ipRanges.setPrefixes(createIp4PrefixListAB(region));
+		ipRanges.setIpv6_prefixes(Collections.emptyList());
 		return ipRanges;
 	}
 	
@@ -147,13 +110,6 @@ class IpRangeControllerTests {
 		List<Ip4Prefix> prefixes = new ArrayList<>();
 		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_US_A, region));
 		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_US_B, region));
-		return prefixes;
-	}
-	
-	private List<Ip4Prefix> createIp4PrefixListCD(String region) {
-		List<Ip4Prefix> prefixes = new ArrayList<>();
-		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_CA_C, region));
-		prefixes.add(createIp4Prefix(TEST_IP4PREFIX_CA_D, region));
 		return prefixes;
 	}
 	
