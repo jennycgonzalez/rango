@@ -36,10 +36,10 @@ public class OkHttpClientService implements HttpClient {
 		return call.execute();
 	}
 	
-	private HttpResponse createHttpResponse(Response response) {
+	private HttpResponse createHttpResponse(Response response) throws IOException {
 		HttpResponse httpResponse = new HttpResponse();
 		httpResponse.setStatusCode(response.code());
-		httpResponse.setBody(response.body().toString());
+		httpResponse.setBody(response.body().string());
 		return httpResponse;
 	}
 	
