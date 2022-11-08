@@ -23,7 +23,7 @@ paths:
       parameters:
         - name: region
           in: query
-          description: Region value that need to be considered for filter
+          description: Region value that needs to be considered for filtering
           required: true
           schema:
             type: string
